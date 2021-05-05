@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+  <span class="navbar-brand constainer col-3">{{chosenProject}}</span>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+
+      <form>
+        <div class="form-row">
+          <label class="nav-link" for="formControlRange">Choose Project:</label>
+          <input id="ProjectRangeInput" type="range" class="form-control-range" min="0" max="{{projects.length - 1}}"
+            (change)="updateProjectChoice(ProjectRangeInput.value)" value="0" #ProjectRangeInput>
+        </div>
+      </form>
+
+    </ul>
+  </div>
+</nav>

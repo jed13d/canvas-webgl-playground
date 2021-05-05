@@ -1,0 +1,11 @@
+<app-header (projectNameEvent)="selectProject($event)"></app-header>
+
+<div class="container" style="margin-top: 100px;">
+<ng-container [ngSwitch]="projectDisplayed">
+  <app-p-intro *ngSwitchCase="'Introduction'"></app-p-intro>
+  <app-p-experiment *ngSwitchCase="'Experiment'"></app-p-experiment>
+  <app-p-rain *ngSwitchCase="'Pixel Rain'"></app-p-rain>
+</ng-container>
+</div>
+
+<router-outlet></router-outlet>
