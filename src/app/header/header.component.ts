@@ -13,12 +13,13 @@ export class HeaderComponent implements AfterViewInit {
 
   @ViewChild('ProjectRangeInput')
   private projectRangeInput!: ElementRef<HTMLInputElement>;
-  
+
   chosenProject: string = "";
   projects: string[] = [
     "Introduction",
     "Experiment",
     "Pixel Rain",
+    "Particle Text",
   ];
 
   constructor(

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { GlobalService } from 'src/app/services/global.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -19,6 +20,13 @@ export class PIntroComponent implements AfterViewInit {
   public redModifier: number = 0;
   public greenModifier: number = 0;
   public blueModifier: number = 0;
+
+  constructor(
+    private globalService: GlobalService,) {
+      this.globalService.debug("experiment-constructor");
+      this.image = new Image();
+      this.image.src = environment.imageSrc;
+  }// ==============================
 
   ngAfterViewInit(): void {
     this.image.src = environment.imageSrc;
@@ -58,7 +66,7 @@ export class PIntroComponent implements AfterViewInit {
 
       let scannedImage = this.context!.getImageData(0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
       let scannedData = scannedImage!.data;
-      // console.log(scannedData);
+      this.globalService.debug(scannedData);
       for(let i = 0; i < scannedData!.length; i += 4) {
           const total = scannedData[i] + scannedData[i + 1] + scannedData[i + 2];
           const averageColorValue = (total / 3) + this.averageModifier;
