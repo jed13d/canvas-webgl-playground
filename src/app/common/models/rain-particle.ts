@@ -12,8 +12,6 @@ export class RainParticle {
     private speed: number;
 
     // modifiers
-    private direction: string = 'down';                 // default 'down'
-
     private globalCompositeOperationOptions: string[] = [
         "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
     ];
@@ -29,8 +27,8 @@ export class RainParticle {
         {   // 0 - b&w "brightness" "default"
             direction: "down",
             globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-            sizeModifier:  1,
-            speedModifier: 0.75,
+            sizeModifier:  1.75,
+            speedModifier: 1.5,
             velocityModifier: 0.5,
         },
         {   // 1 - color rainy window effect
@@ -95,7 +93,7 @@ export class RainParticle {
 
     updateMovement() {
         let movement = (1.9 - this.speed) + this.velocity;
-        movement /= 3;
+        // movement /= 3;
         switch (this.modifierSets[this.selectedModifierSet].direction) {
             case 'up':
                 this.y -= movement;

@@ -8,6 +8,7 @@ import { FooterComponent } from './footer/footer.component';
 import { PIntroComponent } from './p-intro/p-intro.component';
 import { PRainComponent } from './p-rain/p-rain.component';
 import { PExperimentComponent } from './p-experiment/p-experiment.component';
+import { PTextComponent } from './p-text/p-text.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { PExperimentComponent } from './p-experiment/p-experiment.component';
     FooterComponent,
     PIntroComponent,
     PRainComponent,
-    PExperimentComponent
+    PExperimentComponent,
+    PTextComponent
   ],
   imports: [
     BrowserModule,

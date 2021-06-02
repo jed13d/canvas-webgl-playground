@@ -26,6 +26,10 @@ export class PRainComponent implements AfterViewInit {
     this.image.src = environment.imageSrc;
 
     this.context = this.mainCanvas.nativeElement.getContext('2d');
+    this.mainCanvas.nativeElement.height = this.image.height * 2;
+    this.mainCanvas.nativeElement.width = this.image.width * 2;
+    this.numberOfParticles = (this.mainCanvas.nativeElement.height * this.mainCanvas.nativeElement.width) / 10;
+    this.globalService.debug("Number of particles:", this.numberOfParticles);
 
     this.pixelRain();
   }// ==============================
