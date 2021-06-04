@@ -16,7 +16,7 @@ export class RainParticle {
         "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
     ];
 
-    private selectedModifierSet: number = 0;
+    private selectedModifierSet: number = 1;
     private modifierSets: {
         direction: string;
         globalCompositeOperationOptions: string;
@@ -28,7 +28,7 @@ export class RainParticle {
             direction: "down",
             globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
             sizeModifier:  1.75,
-            speedModifier: 1.5,
+            speedModifier: 0.5,
             velocityModifier: 0.5,
         },
         {   // 1 - color rainy window effect

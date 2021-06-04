@@ -28,6 +28,7 @@ export class PTextComponent implements AfterViewInit {
     this.context!.fillStyle = "white";
     this.context!.font = "48px Arial";
     this.context!.fillText("Test", 150, 150);
+
   }
 
   setupMouse() {
