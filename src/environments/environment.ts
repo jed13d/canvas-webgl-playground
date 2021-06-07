@@ -5,9 +5,11 @@
 export const environment = {
   production: false,
   debugging: false,
-  defaultProject: 0,
-  // imageSrc: "assets/images/disturbed.jpg",
-  imageSrc: "assets/images/reaching-out.jpg"
+  defaultProject: 3,
+  imageSrc: "assets/images/batman-sign.png",
+
+  text_selectedTextObj: 0,
+  canvasHeaderOffset: 80,
 };
 
 /*

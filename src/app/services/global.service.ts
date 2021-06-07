@@ -56,7 +56,7 @@ export class GlobalService {
    * @param red number 0-255
    * @param green number 0-255
    * @param blue number 0-255
-   * @returns 
+   * @returns
    */
   calculatePixelRelativeBrightness(red: number, green: number, blue: number): number {
     return Math.sqrt(
@@ -69,8 +69,8 @@ export class GlobalService {
   /**
    * Wrapper method around console.log to output only when in debugging mode.
    * It's parameters are set up just like console.log for ease of use.
-   * @param message 
-   * @param optionalParams 
+   * @param message
+   * @param optionalParams
    */
   debug(message?: any, ...optionalParams: any[]): void {
     if(environment.debugging) {
@@ -82,4 +82,9 @@ export class GlobalService {
     this.debug("GlobalService", "drawImage");
     context!.drawImage(image, 0, 0, width, height);
   }// ==============================
-}
+
+  drawRect(context: CanvasRenderingContext2D, color: string, x: number, y: number, width: number, height: number) {
+    context!.strokeStyle = color;
+    context!.strokeRect(x, y, width, height);
+  }// ==============================
+}// ==============================

@@ -13,8 +13,8 @@ export class PRainComponent implements AfterViewInit {
   @ViewChild('Canvas')
   private mainCanvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
-  private image: HTMLImageElement = new Image();
 
+  private image: HTMLImageElement = new Image();
   private particlesArray: RainParticle[] = [];
   private numberOfParticles = 10000;
   private mappedImage: MappedPixel[][] = [];
