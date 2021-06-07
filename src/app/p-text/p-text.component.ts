@@ -13,7 +13,7 @@ export class PTextComponent implements AfterViewInit {
   @ViewChild('Canvas')
   private canvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
-  canvasClass: string = "canvasPoisitionText";
+  canvasClass: string = 'canvasPoisitionText';
 
   private image: HTMLImageElement = new Image();
   private particlesArray: TextParticle[] = [];
@@ -23,6 +23,20 @@ export class PTextComponent implements AfterViewInit {
   private numberOfParticles = 1000;
   private mouseRadius = 75;
   private mouse: MouseObj = new MouseObj(this.mouseRadius);
+
+  private fontSize: string = '42px';
+  private fonts: string[] = [
+    'Arial',                'Verdana',
+    'Tahoma',               'Trebuchet MS',
+    'Impact',               'Times New Roman',
+    'Didot',                'Georgia',
+    'American Typewriter',  'Andalé Mono',
+    'Courier',              'Lucida Console',
+    'Monaco',               'Bradley Hand',
+    'Brush Script MT',      'Luminari',
+    'Comic Sans MS',
+  ];
+  private demoFont: string = this.fontSize +' '+ this.fonts[4];
 
   /**
    * Preset option sets
@@ -47,10 +61,11 @@ export class PTextComponent implements AfterViewInit {
     scale: number;
     resultOffsetX: number;
     resultOffsetY: number;
+    constellationDistance: number;
   }[] = [
     {
       color: 'white',
-      font: '48px Arial',
+      font: this.demoFont,
       text: 'TEST',
       x: 150,
       y: 150,
@@ -61,6 +76,7 @@ export class PTextComponent implements AfterViewInit {
       scale: 10,
       resultOffsetX: 50,
       resultOffsetY: 100,
+      constellationDistance: 25,
     },
   ];
 
@@ -69,13 +85,9 @@ export class PTextComponent implements AfterViewInit {
     private globalService: GlobalService,) { }
 
   ngAfterViewInit(): void {
-    this.context = this.canvas.nativeElement.getContext('2d');
-
     this.setupMouse();
 
     this.setupCanvas();
-
-    this.animate();
   }// ==============================
 
   private animate() {
@@ -89,15 +101,15 @@ export class PTextComponent implements AfterViewInit {
           break;
 
         // ----------
+
         case 0:
         default:
           this.particlesArray[i].draw(this.context!);
-          // this.particlesArray[i].draw(this.context!, this.mappedImage);
           break;
       }// =====
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
-    // this.debugTextSpace();
+    this.debugTextSpace();
 
     requestAnimationFrame(() => {
       this.animate();
@@ -107,6 +119,11 @@ export class PTextComponent implements AfterViewInit {
   // used to find selector space of text
   private debugTextSpace() {
     switch(this.selectedTextObj) {
+      // ----------
+      case -2:
+        this.globalService.drawRect(this.context!, 'white', 0, (0 + this.canvasHeaderOffset), 750, 750);
+        break;
+
       // ----------
       case 0:
         this.globalService.drawRect(this.context!, 'white',
@@ -125,27 +142,30 @@ export class PTextComponent implements AfterViewInit {
    * Different cavas settings based on 'selectedTextObj' value
    */
   private setupCanvas() {
+    this.context = this.canvas.nativeElement.getContext('2d');
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;
+
     switch(this.selectedTextObj) {
       // ----------
       case -2:
-        this.canvasClass = 'canvasPositionImage';
         this.image.src = environment.imageSrc;
-        this.numberOfParticles = this.image.height * this.image.width;
-        this.setupMappedImage();
+        this.image.addEventListener('load', () => {
+          this.globalService.drawImage(this.context!, this.image, this.image.width, this.image.height);
+          this.setupMappedImage();
+          this.animate();
+        });
         break;
 
       // ----------
       case -1:
-        this.canvas.nativeElement.width = window.innerWidth;
-        this.canvas.nativeElement.height = window.innerHeight;
         this.setupParticleStars();
+        this.animate();
         break;
 
       // ----------
       case 0:
       default:
-        this.canvas.nativeElement.width = window.innerWidth;
-        this.canvas.nativeElement.height = window.innerHeight;
         this.context!.fillStyle = this.textObjs[this.selectedTextObj].color;
         this.context!.font = this.textObjs[this.selectedTextObj].font;
         this.context!.fillText(
@@ -154,6 +174,7 @@ export class PTextComponent implements AfterViewInit {
           this.textObjs[this.selectedTextObj].y);
         // this.debugTextSpace();
         this.setupMappedText();
+        this.animate();
         break;
     }// =====
 
@@ -165,20 +186,23 @@ export class PTextComponent implements AfterViewInit {
    */
   private setupMappedImage() {
     let pixels = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    for(let y = 0; y < this.canvas.nativeElement.height; y++) {
-      let row: MappedPixel[] = [];
-      for(let x = 0; x < this.canvas.nativeElement.width; x++) {
+    for(let y = 0; y < this.canvas.nativeElement.height; y+=2) {
+      // let row: MappedPixel[] = [];
+      for(let x = 0; x < this.canvas.nativeElement.width; x+=2) {
         let red = pixels.data[(y * 4 * pixels.width) + (x * 4)];
         let green = pixels.data[(y * 4 * pixels.width) + (x * 4 + 1)];
         let blue = pixels.data[(y * 4 * pixels.width) + (x * 4 + 2)];
-        let brightness = this.globalService.calculatePixelRelativeBrightness(red, green, blue);
-        row.push(new MappedPixel(
-          brightness,
-          "rgb("+ red +", "+ green +", "+ blue +")"
-        ));// =====
-        this.particlesArray.push(new TextParticle(x, y));
+        if(red > 0 || green > 0 || blue > 0) {
+          let brightness = this.globalService.calculatePixelRelativeBrightness(red, green, blue);
+          let tempMappedPixel = new MappedPixel(
+            brightness,
+            "rgb("+ red +", "+ green +", "+ blue +")"
+          );
+          // row.push(tempMappedPixel);// =====
+          this.particlesArray.push(new TextParticle(x*3, (y*3 + this.canvasHeaderOffset), tempMappedPixel));
+        }// =====
       }// =====
-      this.mappedImage.push(row);
+      // this.mappedImage.push(row);
     }// =====
   }// ==============================
 
@@ -191,7 +215,7 @@ export class PTextComponent implements AfterViewInit {
     this.globalService.debug("pixels:", pixels);
 
     for(let y = 0, y2 = pixels.height; y < y2; y++) {
-      let row: MappedPixel[] = [];
+      // let row: MappedPixel[] = [];
       for(let x = 0, x2 = pixels.width; x < x2; x++) {
         let alpha = pixels.data[(y * 4 * pixels.width) + (x * 4) + 3];
         if(alpha > 128) {
@@ -199,16 +223,18 @@ export class PTextComponent implements AfterViewInit {
           let green = pixels.data[(y * 4 * pixels.width) + (x * 4) + 1];
           let blue = pixels.data[(y * 4 * pixels.width) + (x * 4) + 2];
           let brightness = this.globalService.calculatePixelRelativeBrightness(red, green, blue);
-          row.push(new MappedPixel(
+          let tempMappedPixel = new MappedPixel(
             brightness,
             "rgb("+ red +", "+ green +", "+ blue +")"
-          ));// =====
+          );
+          // row.push(tempMappedPixel);// =====
           this.particlesArray.push(new TextParticle(
             (x * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetX,
-            (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY));
+            (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY,
+            tempMappedPixel));
         }// =====
       }// =====
-      this.mappedImage.push(row);
+      // this.mappedImage.push(row);
     }// =====
     this.globalService.debug("particles:", this.particlesArray, "mapped:", this.mappedImage);
   }// ==============================
@@ -228,10 +254,14 @@ export class PTextComponent implements AfterViewInit {
    * Generates pixels in random locations within the canvas space
    */
   private setupParticleStars() {
+    let tempMappedPixel = new MappedPixel(
+      255,
+      "rgb("+ 255 +", "+ 255 +", "+ 255 +")"
+    );
     for(let i = 0; i < this.numberOfParticles; i++) {
       let x = Math.random() * this.canvas.nativeElement.width;
       let y = Math.random() * this.canvas.nativeElement.height;
-      this.particlesArray.push(new TextParticle(x, y));
+      this.particlesArray.push(new TextParticle(x, y, tempMappedPixel));
     }// =====
   }// ==============================
 }// ==============================

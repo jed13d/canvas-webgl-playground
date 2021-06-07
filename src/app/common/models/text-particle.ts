@@ -5,6 +5,7 @@ export class TextParticle {
   private y!: number;
   private baseX!: number;
   private baseY!: number;
+  private mappedPixel!: MappedPixel;
 
   private selectedModifierSet: number = 0;
   private modifierSets: {
@@ -16,7 +17,7 @@ export class TextParticle {
     {
       avoidSpeed: 50,
       returnSpeed: 10,
-      size: 1,
+      size: 2,
       density: (Math.random() * 159) + 1,
     },
     {
@@ -28,20 +29,15 @@ export class TextParticle {
   ];
 
   // -------------------------------
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, mappedPixel: MappedPixel) {
     this.x = this.baseX = x;
     this.y = this.baseY = y;
+    this.mappedPixel = mappedPixel;
   }// ==============================
 
-  draw(context: CanvasRenderingContext2D, mappedImage?: MappedPixel[][]) {
+  draw(context: CanvasRenderingContext2D) {
     context.beginPath();
-
-    if(mappedImage !== undefined) {
-      context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
-    } else {
-      context.fillStyle = 'white';
-    }// =====
-
+    context.fillStyle = this.mappedPixel.getColor();
     context.arc(this.x, this.y, this.modifierSets[this.selectedModifierSet].size, 0, Math.PI * 2);
     context.closePath();
     context.fill();

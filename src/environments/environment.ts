@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  debugging: false,
+  debugging: true,
   defaultProject: 3,
-  imageSrc: "assets/images/batman-sign.png",
+  imageSrc: "assets/images/disturbed.jpg",
 
   text_selectedTextObj: 0,
   canvasHeaderOffset: 80,
