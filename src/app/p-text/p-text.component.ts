@@ -20,11 +20,10 @@ export class PTextComponent implements AfterViewInit {
   private mappedImage: MappedPixel[][] = [];
 
   // some default values
-  private numberOfParticles = 1000;
   private mouseRadius = 75;
   private mouse: MouseObj = new MouseObj(this.mouseRadius);
 
-  private fontSize: string = '42px';
+  private fontSize: string = '38px';
   private fonts: string[] = [
     'Arial',                'Verdana',
     'Tahoma',               'Trebuchet MS',
@@ -36,7 +35,7 @@ export class PTextComponent implements AfterViewInit {
     'Brush Script MT',      'Luminari',
     'Comic Sans MS',
   ];
-  private demoFont: string = this.fontSize +' '+ this.fonts[4];
+  private demoFont: string = this.fontSize +' '+ this.fonts[14];
 
   /**
    * Preset option sets
@@ -66,7 +65,7 @@ export class PTextComponent implements AfterViewInit {
     {
       color: 'white',
       font: this.demoFont,
-      text: 'TEST',
+      text: 'Demo',
       x: 150,
       y: 150,
       mapX: 150,
@@ -105,15 +104,37 @@ export class PTextComponent implements AfterViewInit {
         case 0:
         default:
           this.particlesArray[i].draw(this.context!);
+          // this.constellationEffect();
           break;
       }// =====
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
-    this.debugTextSpace();
+    // this.debugTextSpace();
 
     requestAnimationFrame(() => {
       this.animate();
     });
+  }// ==============================
+
+  private constellationEffect() {
+    let effectRange = 10;
+    let particleCount = this.particlesArray.length;
+    for(let a = 0; a < particleCount; a++) {
+      for(let b = a; b < particleCount; b++) {
+        let dx = this.particlesArray[a].getX() - this.particlesArray[b].getX();
+        let dy = this.particlesArray[a].getY() - this.particlesArray[b].getY();
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if(distance < effectRange) {
+          this.context!.strokeStyle = 'white';
+          this.context!.lineWidth = 2;
+          this.context!.beginPath();
+          this.context!.moveTo(this.particlesArray[a].getX(), this.particlesArray[a].getY());
+          this.context!.lineTo(this.particlesArray[b].getX(), this.particlesArray[b].getY());
+          this.context!.stroke();
+        }
+      }
+    }
+
   }// ==============================
 
   // used to find selector space of text
@@ -254,11 +275,12 @@ export class PTextComponent implements AfterViewInit {
    * Generates pixels in random locations within the canvas space
    */
   private setupParticleStars() {
+    let numberOfParticles = 1000
     let tempMappedPixel = new MappedPixel(
       255,
       "rgb("+ 255 +", "+ 255 +", "+ 255 +")"
     );
-    for(let i = 0; i < this.numberOfParticles; i++) {
+    for(let i = 0; i < numberOfParticles; i++) {
       let x = Math.random() * this.canvas.nativeElement.width;
       let y = Math.random() * this.canvas.nativeElement.height;
       this.particlesArray.push(new TextParticle(x, y, tempMappedPixel));

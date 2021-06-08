@@ -43,6 +43,14 @@ export class TextParticle {
     context.fill();
   }// ==============================
 
+  getX() {
+    return this.x;
+  }// ==============================
+
+  getY() {
+    return this.y
+  }// ==============================
+
   update(context: CanvasRenderingContext2D, mouse: MouseObj) {
     let dx = mouse.x - this.x;
     let dy = mouse.y - this.y;
