@@ -23,7 +23,10 @@ export class PTextComponent implements AfterViewInit {
   private mouseRadius = 75;
   private mouse: MouseObj = new MouseObj(this.mouseRadius);
 
-  private fontSize: string = '38px';
+  /**
+   * this section is for testing font settings
+   */
+  private fontSize: string = '20px';
   private fonts: string[] = [
     'Arial',                'Verdana',
     'Tahoma',               'Trebuchet MS',
@@ -35,7 +38,7 @@ export class PTextComponent implements AfterViewInit {
     'Brush Script MT',      'Luminari',
     'Comic Sans MS',
   ];
-  private demoFont: string = this.fontSize +' '+ this.fonts[14];
+  private demoFont: string = this.fontSize +' '+ this.fonts[0];
 
   /**
    * Preset option sets
@@ -61,21 +64,23 @@ export class PTextComponent implements AfterViewInit {
     resultOffsetX: number;
     resultOffsetY: number;
     constellationDistance: number;
+    constellationEffect: boolean;
   }[] = [
     {
       color: 'white',
       font: this.demoFont,
-      text: 'Demo',
-      x: 150,
-      y: 150,
-      mapX: 150,
-      mapY: 30,
-      width: 125,
-      height: 50,
+      text: 'A',
+      x: 5,
+      y: 50,
+      mapX: 0,
+      mapY: 0,
+      width: (window.innerWidth / 11) + 15,
+      height: (window.innerHeight / 11),
       scale: 10,
-      resultOffsetX: 50,
-      resultOffsetY: 100,
-      constellationDistance: 25,
+      resultOffsetX: 10,  // negate the (x * scale)
+      resultOffsetY: 10,
+      constellationDistance: 20,
+      constellationEffect: true,
     },
   ];
 
@@ -100,16 +105,21 @@ export class PTextComponent implements AfterViewInit {
           break;
 
         // ----------
-
         case 0:
         default:
           this.particlesArray[i].draw(this.context!);
-          // this.constellationEffect();
           break;
       }// =====
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
-    // this.debugTextSpace();
+
+    if(this.textObjs[this.selectedTextObj].constellationEffect) {
+      this.constellationEffect();
+    }// =====
+
+    if(this.selectedTextObj >= 0) {
+      this.debugTextSpace();
+    }// =====
 
     requestAnimationFrame(() => {
       this.animate();
@@ -117,15 +127,17 @@ export class PTextComponent implements AfterViewInit {
   }// ==============================
 
   private constellationEffect() {
-    let effectRange = 10;
+    let effectRange = this.textObjs[this.selectedTextObj].constellationDistance;
     let particleCount = this.particlesArray.length;
     for(let a = 0; a < particleCount; a++) {
       for(let b = a; b < particleCount; b++) {
         let dx = this.particlesArray[a].getX() - this.particlesArray[b].getX();
         let dy = this.particlesArray[a].getY() - this.particlesArray[b].getY();
         let distance = Math.sqrt(dx * dx + dy * dy);
+
         if(distance < effectRange) {
-          this.context!.strokeStyle = 'white';
+          let opacityValue = 1;
+          this.context!.strokeStyle = 'rgba(255,255,255,'+ opacityValue +')';
           this.context!.lineWidth = 2;
           this.context!.beginPath();
           this.context!.moveTo(this.particlesArray[a].getX(), this.particlesArray[a].getY());
@@ -152,6 +164,13 @@ export class PTextComponent implements AfterViewInit {
           (this.textObjs[this.selectedTextObj].mapY + this.canvasHeaderOffset),
           this.textObjs[this.selectedTextObj].width,
           this.textObjs[this.selectedTextObj].height);
+        this.globalService.drawText(
+          this.context!,
+          this.textObjs[this.selectedTextObj].text,
+          this.textObjs[this.selectedTextObj].x,
+          this.textObjs[this.selectedTextObj].y + this.canvasHeaderOffset,
+          this.textObjs[this.selectedTextObj].color,
+          this.textObjs[this.selectedTextObj].font);
         break;
       default:
         this.globalService.drawRect(this.context!, 'white', 0, (0 + this.canvasHeaderOffset), 100, 100);
@@ -166,6 +185,7 @@ export class PTextComponent implements AfterViewInit {
     this.context = this.canvas.nativeElement.getContext('2d');
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
+    this.globalService.debug("Inner width & height:", window.innerWidth, window.innerHeight);
 
     switch(this.selectedTextObj) {
       // ----------
@@ -187,13 +207,7 @@ export class PTextComponent implements AfterViewInit {
       // ----------
       case 0:
       default:
-        this.context!.fillStyle = this.textObjs[this.selectedTextObj].color;
-        this.context!.font = this.textObjs[this.selectedTextObj].font;
-        this.context!.fillText(
-          this.textObjs[this.selectedTextObj].text,
-          this.textObjs[this.selectedTextObj].x,
-          this.textObjs[this.selectedTextObj].y);
-        // this.debugTextSpace();
+        this.debugTextSpace();
         this.setupMappedText();
         this.animate();
         break;
@@ -251,7 +265,8 @@ export class PTextComponent implements AfterViewInit {
           // row.push(tempMappedPixel);// =====
           this.particlesArray.push(new TextParticle(
             (x * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetX,
-            (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY,
+            (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY
+             + this.canvasHeaderOffset,
             tempMappedPixel));
         }// =====
       }// =====

@@ -87,4 +87,10 @@ export class GlobalService {
     context!.strokeStyle = color;
     context!.strokeRect(x, y, width, height);
   }// ==============================
+
+  drawText(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, font: string) {
+    context!.fillStyle = color;
+    context!.font = font;
+    context!.fillText(text, x, y);
+  }// ==============================
 }// ==============================
