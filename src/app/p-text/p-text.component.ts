@@ -26,7 +26,7 @@ export class PTextComponent implements AfterViewInit {
   /**
    * this section is for testing font settings
    */
-  private fontSize: string = '20px';
+  private fontSize: string = '36px';
   private fonts: string[] = [
     'Arial',                'Verdana',
     'Tahoma',               'Trebuchet MS',
@@ -69,7 +69,7 @@ export class PTextComponent implements AfterViewInit {
     {
       color: 'white',
       font: this.demoFont,
-      text: 'A',
+      text: 'Naomi',
       x: 5,
       y: 50,
       mapX: 0,

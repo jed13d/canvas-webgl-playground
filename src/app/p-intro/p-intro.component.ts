@@ -10,10 +10,8 @@ import { environment } from 'src/environments/environment';
 export class PIntroComponent implements AfterViewInit {
 
   @ViewChild('Canvas')
-  private mainCanvas!: ElementRef<HTMLCanvasElement>;
-
+  private canvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
-
   private image: HTMLImageElement = new Image();
 
   public averageModifier: number = 0;
@@ -30,8 +28,10 @@ export class PIntroComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.image.src = environment.imageSrc;
+    this.canvas.nativeElement.height = this.image.height * 2;
+    this.canvas.nativeElement.width = this.image.width * 2;
 
-    this.context = this.mainCanvas.nativeElement.getContext('2d');
+    this.context = this.canvas.nativeElement.getContext('2d');
     this.context!.drawImage(this.image, 0, 0);
 
     this.introductionExample();
@@ -55,16 +55,16 @@ export class PIntroComponent implements AfterViewInit {
 
   private blankListenerWrapper() {
     this.image.addEventListener('load', () => {
-      this.context!.drawImage(this.image, 0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
+      this.context!.drawImage(this.image, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     });
   }// ==============================
 
   private introductionExample() {
     this.image.addEventListener('load', () => {
-      this.context!.drawImage(this.image, 0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
+      this.context!.drawImage(this.image, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-      let scannedImage = this.context!.getImageData(0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
+      let scannedImage = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       let scannedData = scannedImage!.data;
       this.globalService.debug(scannedData);
       for(let i = 0; i < scannedData!.length; i += 4) {
