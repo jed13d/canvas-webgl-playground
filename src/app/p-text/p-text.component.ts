@@ -69,7 +69,7 @@ export class PTextComponent implements AfterViewInit {
     {
       color: 'white',
       font: this.demoFont,
-      text: 'Naomi',
+      text: 'Demo Text',
       x: 5,
       y: 50,
       mapX: 0,

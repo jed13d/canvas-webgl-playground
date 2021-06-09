@@ -74,8 +74,13 @@ export class GlobalService {
    */
   debug(message?: any, ...optionalParams: any[]): void {
     if(environment.debugging) {
-      console.log(message, optionalParams);
-    }
+      if(optionalParams.length > 0) {
+        console.log("--> DEBUG:\n\t", message, optionalParams);
+      } else {
+        console.log("--> DEBUG:\n\t", message);
+      }
+      // console.log(JSON.parse(JSON.stringify(obj)))
+    }// =====
   }// ==============================
 
   drawImage(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number) {

@@ -1,21 +1,21 @@
 /* The Canvas */
 #Canvas {
-    border: 0px solid white;        /* Border, usually for dev purposes */
-    top: 50%;                       /* v-align */
-    left: 50%;                      /* h-align */
-    position: relative;             /* Helps with centering */
-    transform: translate(-50%, 0%); /* Helps with centering */
+  border: 0px solid white;
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, 0%);
 }
 
 /* The side navigation menu */
 #SideBar {
-  height: 100%;             /* 100% Full-height */
-  width: 240px;             /* 0 width - change this with JavaScript */
-  position: fixed;          /* Stay in place */
-  z-index: 1;               /* Stay on top */
-  top: 0;                   /* Stay at the top */
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
   left: 0;
-  background-color: #A00;   /* Black*/
-  overflow-x: hidden;       /* Disable horizontal scroll */
-  padding-top: 60px;        /* Place content 60px from the top */
+  background-color: #A00;
+  overflow-x: hidden;
+  padding: 80px 10px 10px 10px;
 }
