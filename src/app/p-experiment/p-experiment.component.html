@@ -1,1 +1,44 @@
+<div id="SideBar" class="bg-info text-white">
+  <form>
+    <div class="form-row">
+
+      <div class="form-group col-12">
+        <label class="nav-link" for="formControlRange">
+          <i class="bi bi-info-circle"></i>&nbsp;
+          Average Modifier: {{averageModifier}}
+        </label>
+        <input id="AverageRangeInput" type="range" class="form-control-range" min="-100" max="100"
+          (change)="updateAverageModifier(AverageRangeInput.value)" value="0" #AverageRangeInput>
+      </div>
+
+      <div class="form-group col-12">
+        <label class="nav-link" for="formControlRange">
+          <i class="bi bi-info-circle"></i>&nbsp;
+          Red Modifier: {{redModifier}}
+        </label>
+        <input id="RedRangeInput" type="range" class="form-control-range" min="-100" max="100"
+          (change)="updateRedModifier(RedRangeInput.value)" value="0" #RedRangeInput>
+      </div>
+
+      <div class="form-group col-12">
+        <label class="nav-link" for="formControlRange">
+          <i class="bi bi-info-circle"></i>&nbsp;
+          Green Modifier: {{greenModifier}}
+        </label>
+        <input id="GreenRangeInput" type="range" class="form-control-range" min="-100" max="100"
+          (change)="updateGreenModifier(GreenRangeInput.value)" value="0" #GreenRangeInput>
+      </div>
+
+      <div class="form-group col-12">
+        <label class="nav-link" for="formControlRange">
+          <i class="bi bi-info-circle"></i>&nbsp;
+          Blue Modifier: {{blueModifier}}
+        </label>
+        <input id="BlueRangeInput" type="range" class="form-control-range" min="-100" max="100"
+          (change)="updateBlueModifier(BlueRangeInput.value)" value="0" #BlueRangeInput>
+      </div>
+    </div>
+  </form>
+</div>
+
 <canvas id="Canvas" #Canvas></canvas>

@@ -45,19 +45,19 @@ export class PIntroComponent implements AfterViewInit {
 
   updateRedModifier(value: any) {
     this.globalService.debug("updateRedModifier - value:", value);
-    this.redModifier = value;
+    this.redModifier = parseInt(value);
     this.updateImage();
   }// ==============================
 
   updateGreenModifier(value: any) {
     this.globalService.debug("updateGreenModifier - value:", value);
-    this.greenModifier = value;
+    this.greenModifier = parseInt(value);
     this.updateImage();
   }// ==============================
 
   updateBlueModifier(value: any) {
     this.globalService.debug("updateBlueModifier - value:", value);
-    this.blueModifier = value;
+    this.blueModifier = parseInt(value);
     this.updateImage();
   }// ==============================
 
@@ -84,10 +84,6 @@ export class PIntroComponent implements AfterViewInit {
     }// =====
   }// ==============================
 
-  private stringifyObject(obj: any): string {
-    return JSON.parse(JSON.stringify(obj));
-  }// ==============================
-
   private setupLoadListener() {
     this.image.addEventListener('load', () => {
       this.updateImage();
@@ -100,7 +96,7 @@ export class PIntroComponent implements AfterViewInit {
 
     let scannedImage = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     let scannedData = scannedImage!.data;
-    this.globalService.debug("Scanned Image Data:", scannedData);
+    this.globalService.debug("Scanned Image Data:", scannedData!);
 
     for(let i = 0; i < scannedData!.length; i += 4) {
         const total = scannedData[i] + scannedData[i + 1] + scannedData[i + 2];
@@ -110,7 +106,7 @@ export class PIntroComponent implements AfterViewInit {
         scannedData[i + 2] = averageColorValue + this.blueModifier;
     }
     scannedImage!.data.set(scannedData);
-    this.context?.putImageData(scannedImage!, 0, 0);
+    this.context!.putImageData(scannedImage!, 0, 0);
   }// ==============================
 
 }// ==============================

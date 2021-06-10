@@ -1,16 +1,25 @@
+ß/* The Canvas */
 #Canvas {
-    border: 2px solid white;
-    top: 50%;
-    left: 50%;
-    position: relative;
+  border: 0px solid white;
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, 0%);
+}
 
-    // reaching-out
-    width: 501px;
-    height: 672px;
+/* The side navigation menu */
+#SideBar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #A00;
+  overflow-x: hidden;
+  padding: 80px 10px 10px 10px;
+}
 
-    // disturbed
-    // width: 500px;
-    // height: 500px;
-
-    transform: translate(-50%, 0%);
+#SideBar label {
+  font-size: 14px;
 }

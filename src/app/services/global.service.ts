@@ -84,7 +84,7 @@ export class GlobalService {
   }// ==============================
 
   drawImage(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number) {
-    this.debug("GlobalService", "drawImage");
+    this.debug("GlobalService: drawImage");
     context!.drawImage(image, 0, 0, width, height);
   }// ==============================
 
@@ -97,5 +97,9 @@ export class GlobalService {
     context!.fillStyle = color;
     context!.font = font;
     context!.fillText(text, x, y);
+  }// ==============================
+
+  stringifyObject(obj: any): string {
+    return JSON.parse(JSON.stringify(obj));
   }// ==============================
 }// ==============================
