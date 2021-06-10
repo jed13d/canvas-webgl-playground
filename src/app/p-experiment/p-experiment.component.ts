@@ -19,7 +19,7 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   public greenModifier: number = 0;
   public blueModifier: number = 0;
 
-  private maxNumberOfPixels: number = 10000;
+  private desiredNumberOfPixels: number = 250000;
 
   constructor(
     private globalService: GlobalService,) {
@@ -44,6 +44,8 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
    */
   ngAfterViewInit(): void {
     this.debug("AfterViewInit");
+    this.setupCanvas();
+    this.setupLoadListener();
   }// ==============================
 
   ngOnChanges(): void {
@@ -58,14 +60,30 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     this.globalService.debug("experiment-OnInit");
   }// ==============================
 
-  selectSepia(): void {
+  selectOriginal(): void {
+    this.debug("selectOriginal");
 
+    // clear the canvas
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    // place a clean copy of the image on the canvas
+    this.globalService.drawImage(this.context!, this.image, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
+  }// ==============================
+
+  selectSepia(): void {
+    this.debug("selectSepia");
+
+    // clear the canvas
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    // place a sepia
+    this.globalService.applySepia(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }// ==============================
 
   updateAverageModifier(value: string): void {
     this.globalService.debug("updateAverageModifier - value:".concat(' ', value));
     this.averageModifier = parseInt(value);
-    this.updateImage();
+    this.globalService.applyGrayscale(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.averageModifier);
   }// ==============================
 
   updateRedModifier(value: string): void {
@@ -102,25 +120,6 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     }// =====
   }// ==============================
 
-  private updateImage(): void {
-    this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    this.context!.drawImage(this.image, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-
-    let scannedImage = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    let scannedData = scannedImage!.data;
-    this.globalService.debug("Scanned Image Data:", scannedData!);
-
-    for(let i = 0; i < scannedData!.length; i += 4) {
-        const total = scannedData[i] + scannedData[i + 1] + scannedData[i + 2];
-        const averageColorValue = (total / 3) + this.averageModifier;
-        scannedData[i] = averageColorValue + this.redModifier;
-        scannedData[i + 1] = averageColorValue + this.greenModifier;
-        scannedData[i + 2] = averageColorValue + this.blueModifier;
-    }
-    scannedImage!.data.set(scannedData);
-    this.context!.putImageData(scannedImage!, 0, 0);
-  }// ==============================
-
   /**
    * Meat and potatoes
    */
@@ -144,14 +143,55 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     this.debug("setupCanvas");
 
     let pixelCount = this.image.width * this.image.height;
-    let imageScaler = Math.floor(pixelCount / this.maxNumberOfPixels) + 1;
+    let imageScaler: number = 1;
+    if(pixelCount > this.desiredNumberOfPixels) {
+      imageScaler = Math.floor(pixelCount / this.desiredNumberOfPixels) / 2;
+      imageScaler = (imageScaler > 0) ? imageScaler : 1;
+      this.canvas!.nativeElement.width = this.image.width / imageScaler;
+      this.canvas!.nativeElement.height = this.image.width / imageScaler;
+    } else if(pixelCount < this.desiredNumberOfPixels) {
+      imageScaler = Math.floor(this.desiredNumberOfPixels / pixelCount) / 2;
+      imageScaler = (imageScaler > 0) ? imageScaler : 1;
+      this.canvas!.nativeElement.width = this.image.width * imageScaler;
+      this.canvas!.nativeElement.height = this.image.width * imageScaler;
+    }
+    
     this.context = this.canvas!.nativeElement.getContext('2d');
-    this.canvas.nativeElement.width = this.image.width / imageScaler;
-    this.canvas.nativeElement.height = this.image.width / imageScaler;
+    this.debug("canvas: "+ this.canvas!.nativeElement.width +", "+ this.canvas!.nativeElement.height +", "+ imageScaler);
+  }// ==============================
 
+  private setupLoadListener() {
     this.image.addEventListener('load', () => {
       this.updateImage();
     });// =====
+  }// ==============================
+
+  private updateImage(): void {
+    this.debug("updateImage");
+
+    // clear the canvas
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    // place a clean copy of the image on the canvas
+    this.globalService.drawImage(this.context!, this.image, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
+
+    // get the image data
+    let scannedImage = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    let scannedData = scannedImage!.data;
+    this.debug("Scanned Image Data:", scannedData!);
+
+    // manipulate the copied image data, averaging out the colors
+    for(let i = 0; i < scannedData!.length; i += 4) {
+        const total = scannedData[i] + scannedData[i + 1] + scannedData[i + 2];
+        const averageColorValue = (total / 3) + this.averageModifier;
+        scannedData[i] = averageColorValue + this.redModifier;
+        scannedData[i + 1] = averageColorValue + this.greenModifier;
+        scannedData[i + 2] = averageColorValue + this.blueModifier;
+    }// =====
+
+    // place modified image on the canvas
+    scannedImage!.data.set(scannedData);
+    this.context!.putImageData(scannedImage!, 0, 0);
   }// ==============================
 
 }// ==============================

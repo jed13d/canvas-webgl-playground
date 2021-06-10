@@ -21,16 +21,16 @@ export class GlobalService {
     context!.putImageData(imageData!, 0, 0);
   }// ==============================
 
-  applyGrayscale(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number) {
+  applyGrayscale(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number, modifier: number = 0) {
     this.debug("GlobalService", "applyGrayscale");
     context!.drawImage(image, 0, 0, width, height);
     const imageData = context!.getImageData(0, 0, width, height);
     const data = imageData!.data;
   	for (var i = 0; i < data.length; i += 4) {
   		var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-  		data[i]     = avg; // red
-  		data[i + 1] = avg; // green
-  		data[i + 2] = avg; // blue
+  		data[i]     = avg + modifier; // red
+  		data[i + 1] = avg + modifier; // green
+  		data[i + 2] = avg + modifier; // blue
   	}
     // imageData!.data.set(data);
     context!.putImageData(imageData!, 0, 0);
@@ -64,6 +64,11 @@ export class GlobalService {
       (green * green) * 0.587 +
       (blue * blue) * 0.114
     )/100;
+  }// ==============================
+
+  clearCanvas(context: CanvasRenderingContext2D, width: number, height: number) {
+    // clear the canvas
+    context!.clearRect(0, 0, width, height);
   }// ==============================
 
   /**

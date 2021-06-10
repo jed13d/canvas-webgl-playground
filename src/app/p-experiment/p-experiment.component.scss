@@ -1,10 +1,10 @@
-ß/* The Canvas */
+/* The Canvas */
 #Canvas {
   border: 0px solid white;
   top: 50%;
   left: 50%;
-  position: relative;
-  transform: translate(-50%, 0%);
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
 
 /* The side navigation menu */
@@ -15,7 +15,6 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #A00;
   overflow-x: hidden;
   padding: 80px 10px 10px 10px;
 }
