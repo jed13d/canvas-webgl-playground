@@ -1,10 +1,10 @@
-<div id="SideBar" class="bg-info text-white">
+<div id="SideBar" class="bg-info text-white col-2">
   <form>
     <div class="form-row">
 
       <div class="form-group col-12">
-        <label class="nav-link" for="formControlRange">
-          <i class="bi bi-info-circle"></i>&nbsp;
+        <label class="nav-link" for="AverageRangeInput">
+          <span class="bi bi-info-circle"></span>&nbsp;
           Gray Modifier: {{averageModifier}}
         </label>
         <input id="AverageRangeInput" type="range" class="form-control-range" min="-100" max="100"
@@ -12,8 +12,8 @@
       </div>
 
       <div class="form-group col-12">
-        <label class="nav-link" for="formControlRange">
-          <i class="bi bi-info-circle"></i>&nbsp;
+        <label class="nav-link" for="RedRangeInput">
+          <span class="bi bi-info-circle"></span>&nbsp;
           Red Modifier: {{redModifier}}
         </label>
         <input id="RedRangeInput" type="range" class="form-control-range" min="-100" max="100"
@@ -21,8 +21,8 @@
       </div>
 
       <div class="form-group col-12">
-        <label class="nav-link" for="formControlRange">
-          <i class="bi bi-info-circle"></i>&nbsp;
+        <label class="nav-link" for="GreenRangeInput">
+          <span class="bi bi-info-circle"></span>&nbsp;
           Green Modifier: {{greenModifier}}
         </label>
         <input id="GreenRangeInput" type="range" class="form-control-range" min="-100" max="100"
@@ -30,14 +30,44 @@
       </div>
 
       <div class="form-group col-12">
-        <label class="nav-link" for="formControlRange">
-          <i class="bi bi-info-circle"></i>&nbsp;
+        <label class="nav-link" for="BlueRangeInput">
+          <span class="bi bi-info-circle"></span>&nbsp;
           Blue Modifier: {{blueModifier}}
         </label>
         <input id="BlueRangeInput" type="range" class="form-control-range" min="-100" max="100"
           (change)="updateBlueModifier(BlueRangeInput.value)" value="0" #BlueRangeInput>
       </div>
+
     </div>
+    <fieldset class="form-group col-12">
+      <div class="form-row col-12">
+
+        <div class="form-check col-12">
+          <input id="OriginalRadio" class="form-check-input" name="Presets" type="radio" (change)="selectOriginal()">
+          <label class="form-check-label" for="OriginalRadio">
+            &nbsp;Original&nbsp;
+            <span class="bi bi-info-circle"></span>&nbsp;
+          </label>
+        </div>
+
+        <div class="form-check col-12">
+          <input id="InvertRadio" class="form-check-input" name="Presets" type="radio" (change)="selectInvert()">
+          <label class="form-check-label" for="InvertRadio">
+            &nbsp;Invert&nbsp;
+            <span class="bi bi-info-circle"></span>&nbsp;
+          </label>
+        </div>
+
+        <div class="form-check col-12">
+          <input id="SepiaRadio" class="form-check-input" name="Presets" type="radio" (change)="selectSepia()">
+          <label class="form-check-label" for="SepiaRadio">
+            &nbsp;Sepia&nbsp;
+            <span class="bi bi-info-circle"></span>&nbsp;
+          </label>
+        </div>
+
+      </div>
+    </fieldset>
   </form>
 </div>
 

@@ -60,6 +60,16 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     this.globalService.debug("experiment-OnInit");
   }// ==============================
 
+  selectInvert(): void {
+    this.debug("selectInvert");
+
+    // clear the canvas
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    // place a sepia
+    this.globalService.applyInvert(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  }// ==============================
+
   selectOriginal(): void {
     this.debug("selectOriginal");
 
@@ -120,25 +130,6 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     }// =====
   }// ==============================
 
-  /**
-   * Meat and potatoes
-   */
-  private mainExperiment(): void {
-    this.globalService.debug("experiment-mainExperiment");
-
-    this.globalService.drawImage(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    setTimeout(() => {
-      this.globalService.applyGrayscale(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    }, 5000);
-    setTimeout(() => {
-      this.globalService.applyInvert(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    }, 10000);
-    setTimeout(() => {
-      this.globalService.applySepia(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    }, 15000);
-
-  }// ==============================
-
   private setupCanvas(): void {
     this.debug("setupCanvas");
 
@@ -154,7 +145,7 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
       imageScaler = (imageScaler > 0) ? imageScaler : 1;
       this.canvas!.nativeElement.width = this.image.width * imageScaler;
       this.canvas!.nativeElement.height = this.image.width * imageScaler;
-    }
+    }// =====
     
     this.context = this.canvas!.nativeElement.getContext('2d');
     this.debug("canvas: "+ this.canvas!.nativeElement.width +", "+ this.canvas!.nativeElement.height +", "+ imageScaler);
