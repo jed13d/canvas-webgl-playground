@@ -16,8 +16,7 @@ export class HeaderComponent implements AfterViewInit {
 
   chosenProject: string = "";
   projects: string[] = [
-    "Introduction",
-    "Experiment",
+    "Image Filters",
     "Pixel Rain",
     "Particle Text",
   ];

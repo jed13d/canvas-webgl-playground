@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { PIntroComponent } from './p-intro/p-intro.component';
 import { PRainComponent } from './p-rain/p-rain.component';
 import { PExperimentComponent } from './p-experiment/p-experiment.component';
 import { PTextComponent } from './p-text/p-text.component';
@@ -15,7 +14,6 @@ import { PTextComponent } from './p-text/p-text.component';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    PIntroComponent,
     PRainComponent,
     PExperimentComponent,
     PTextComponent
