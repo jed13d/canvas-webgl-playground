@@ -4,6 +4,7 @@
 
       <div class="form-group col-12">
         <label class="nav-link" for="AverageRangeInput">
+          <input class="form-check-input" type="checkbox" id="AverageUsedWithColorCB" (change)="toggleAverageUsedFlag()" #AverageUsedWithColorCB>
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Tooltip on top"></span>&nbsp;
           Gray Modifier: {{averageModifier}}
         </label>

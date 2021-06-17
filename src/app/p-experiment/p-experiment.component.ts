@@ -14,6 +14,10 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   private context?: CanvasRenderingContext2D | null = null;
   private image: HTMLImageElement = new Image();
 
+  @ViewChild('AverageUsedWithColorCB')
+  private averageUsedWithColorCB!: ElementRef<HTMLInputElement>;
+
+  private averageUsedFlag: boolean = false;
   public averageModifier: number = 0;
   public redModifier: number = 0;
   public greenModifier: number = 0;
@@ -90,9 +94,15 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     this.globalService.applySepia(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }// ==============================
 
+  toggleAverageUsedFlag() {
+    this.averageUsedFlag = this.averageUsedWithColorCB!.nativeElement.checked;
+    this.updateImage();
+  }// ==============================
+
   updateAverageModifier(value: string): void {
     this.globalService.debug("updateAverageModifier - value:".concat(' ', value));
     this.averageModifier = parseInt(value);
+    this.averageUsedWithColorCB!.nativeElement.checked = true;
     this.globalService.applyGrayscale(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.averageModifier);
   }// ==============================
 
@@ -175,9 +185,9 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
     for(let i = 0; i < scannedData!.length; i += 4) {
         const total = scannedData[i] + scannedData[i + 1] + scannedData[i + 2];
         const averageColorValue = (total / 3) + this.averageModifier;
-        scannedData[i] = averageColorValue + this.redModifier;
-        scannedData[i + 1] = averageColorValue + this.greenModifier;
-        scannedData[i + 2] = averageColorValue + this.blueModifier;
+        scannedData[i] = (this.averageUsedFlag) ? averageColorValue + this.redModifier : scannedData[i] + this.redModifier;
+        scannedData[i + 1] = (this.averageUsedFlag) ? averageColorValue + this.greenModifier : scannedData[i + 1] + this.greenModifier;
+        scannedData[i + 2] = (this.averageUsedFlag) ? averageColorValue + this.blueModifier : scannedData[i + 2] + this.blueModifier;
     }// =====
 
     // place modified image on the canvas
