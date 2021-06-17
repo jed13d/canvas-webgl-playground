@@ -8,6 +8,7 @@ import { FooterComponent } from './footer/footer.component';
 import { PRainComponent } from './p-rain/p-rain.component';
 import { PExperimentComponent } from './p-experiment/p-experiment.component';
 import { PTextComponent } from './p-text/p-text.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PTextComponent } from './p-text/p-text.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
