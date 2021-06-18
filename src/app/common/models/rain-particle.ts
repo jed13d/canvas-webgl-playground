@@ -1,4 +1,4 @@
-import { MappedPixel } from 'src/app/common/models';
+import { MappedPixel, RainParticleSettings } from 'src/app/common/models';
 
 export class RainParticle {
     // definite assignment allowing call to method to assign without error
@@ -11,45 +11,19 @@ export class RainParticle {
     private canvasHeight: number;
     private speed: number;
 
-    // modifiers
-    private globalCompositeOperationOptions: string[] = [
-        "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
-    ];
+    private rainParticleSettings: RainParticleSettings;
 
-    private selectedModifierSet: number = 1;
-    private modifierSets: {
-        direction: string;
-        globalCompositeOperationOptions: string;
-        sizeModifier: number;
-        speedModifier: number;
-        velocityModifier: number;
-    }[] = [
-        {   // 0 - b&w "brightness" "default"
-            direction: "down",
-            globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-            sizeModifier:  1.75,
-            speedModifier: 0.5,
-            velocityModifier: 0.5,
-        },
-        {   // 1 - color rainy window effect
-            direction: "down",
-            globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-            sizeModifier:  Math.random() * 5,
-            speedModifier: 0.75,
-            velocityModifier: 0.5,
-        }
-    ];
-
-    constructor(width: number, height: number) {
+    constructor(width: number, height: number, rainParticleSettings: RainParticleSettings) {
         this.canvasWidth = width;
         this.canvasHeight = height;
         this.speed = 0;
+        this.rainParticleSettings = rainParticleSettings;
         this.resetPosition();
     }// ==============================
 
     draw(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
         context.beginPath();
-        switch(this.selectedModifierSet) {
+        switch(this.rainParticleSettings.color) {
             case 1:
                 context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
                 break;
@@ -67,9 +41,9 @@ export class RainParticle {
     }// ==============================
 
     resetPosition() {
-        this.size = Math.random() * this.modifierSets[this.selectedModifierSet].sizeModifier;
-        this.velocity = Math.random() * this.modifierSets[this.selectedModifierSet].velocityModifier;
-        switch (this.modifierSets[this.selectedModifierSet].direction) {
+        this.size = Math.random() * this.rainParticleSettings.sizeModifier;
+        this.velocity = Math.random() * this.rainParticleSettings.velocityModifier;
+        switch (this.rainParticleSettings.direction) {
 
             case 'up':
                 this.y = this.canvasHeight - 1;
@@ -86,15 +60,15 @@ export class RainParticle {
 
     update(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
         this.updateMovement();
-        this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * this.modifierSets[this.selectedModifierSet].speedModifier;
-        context.globalCompositeOperation = this.modifierSets[this.selectedModifierSet].globalCompositeOperationOptions;
+        this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * this.rainParticleSettings.speedModifier;
+        context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
         this.draw(context, mappedImage);
     }// ==============================
 
     updateMovement() {
         let movement = (1.9 - this.speed) + this.velocity;
         // movement /= 3;
-        switch (this.modifierSets[this.selectedModifierSet].direction) {
+        switch (this.rainParticleSettings.direction) {
             case 'up':
                 this.y -= movement;
                 if(this.y <= 0) this.resetPosition();

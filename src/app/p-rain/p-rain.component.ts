@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
-import { MappedPixel, RainParticle } from 'src/app/common/models';
+import { MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
 
 @Component({
   selector: 'app-p-rain',
@@ -18,6 +18,32 @@ export class PRainComponent implements AfterViewInit {
   private particlesArray: RainParticle[] = [];
   private numberOfParticles = 10000;
   private mappedImage: MappedPixel[][] = [];
+
+  /**
+   * Preset settings for rain particles.
+   */
+  private globalCompositeOperationOptions: string[] = [
+     "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
+  ];
+  private selectedRainParticleSettings: number = 0;
+  private rainParticleSettings: RainParticleSettings[] = [
+    {   // 0 - b&w "brightness" "default"
+      color: this.selectedRainParticleSettings,
+      direction: "down",
+      globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      sizeModifier:  1.75,
+      speedModifier: 0.5,
+      velocityModifier: 0.5,
+    },
+    {   // 1 - color rainy window effect
+      color: this.selectedRainParticleSettings,
+      direction: "down",
+      globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      sizeModifier:  Math.random() * 5,
+      speedModifier: 0.75,
+      velocityModifier: 0.5,
+    }
+  ];
 
   constructor(
     private globalService: GlobalService,) {}
@@ -79,7 +105,7 @@ export class PRainComponent implements AfterViewInit {
     }// =====
 
     for(let i = 0; i < this.numberOfParticles; i++) {
-      this.particlesArray.push(new RainParticle(this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height))
+      this.particlesArray.push(new RainParticle(this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height, this.rainParticleSettings[this.selectedRainParticleSettings]))
     }// =====
   }// ==============================
 
