@@ -57,14 +57,14 @@ export class RainParticle {
             default:
                 context.fillStyle = 'white';
                 break;
-        }
+        }// =====
         context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         context.fill();
     }// ==============================
 
     getSpeed() {
       return this.speed;
-    }
+    }// ==============================
 
     resetPosition() {
         this.size = Math.random() * this.modifierSets[this.selectedModifierSet].sizeModifier;
@@ -81,7 +81,7 @@ export class RainParticle {
                 this.y = 0;
                 this.x = Math.random() * this.canvasWidth;
                 break;
-        }
+        }// =====
     }// ==============================
 
     update(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
@@ -105,10 +105,10 @@ export class RainParticle {
                 this.y += movement;
                 if(this.y >= this.canvasHeight) this.resetPosition();
                 break;
-        }
+        }// =====
         if(this.y >= this.canvasHeight || this.x >= this.canvasWidth
             || this.y <= 0 || this.x <= 0) {
             this.resetPosition();
-        }
-    }
+        }// =====
+    }// =====
 }// ==============================

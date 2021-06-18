@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   debugging: true,
-  defaultProject: 0,
+  defaultProject: 1,
   imageSrc: "assets/images/disturbed.jpg",
 
   text_selectedTextObj: 0,
