@@ -48,7 +48,6 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
    */
   ngAfterViewInit(): void {
     this.debug("AfterViewInit");
-    this.setupCanvas();
     this.setupLoadListener();
   }// ==============================
 
@@ -156,13 +155,14 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
       this.canvas!.nativeElement.width = this.image.width * imageScaler;
       this.canvas!.nativeElement.height = this.image.width * imageScaler;
     }// =====
-    
+
     this.context = this.canvas!.nativeElement.getContext('2d');
     this.debug("canvas: "+ this.canvas!.nativeElement.width +", "+ this.canvas!.nativeElement.height +", "+ imageScaler);
   }// ==============================
 
   private setupLoadListener() {
     this.image.addEventListener('load', () => {
+      this.setupCanvas();
       this.updateImage();
     });// =====
   }// ==============================
