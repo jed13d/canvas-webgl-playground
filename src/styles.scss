@@ -1,6 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
 body {
   background: black !important;
 }
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+
+/* The Canvas */
+#Canvas {
+  border: 0px solid white;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+/* The side navigation menu */
+#SideBar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  padding: 80px 10px 10px 10px;
+}
+
+#SideBar label {
+  font-size: 14px;
+}
