@@ -58,16 +58,20 @@ export class RainParticle {
         }// =====
     }// ==============================
 
+    setRainParticleSettings(rainParticleSettings: RainParticleSettings) {
+      this.rainParticleSettings = rainParticleSettings;
+    }// ==============================
+
     update(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
-        this.updateMovement();
-        this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * this.rainParticleSettings.speedModifier;
-        context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
-        this.draw(context, mappedImage);
+      this.updateMovement();
+      this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * this.rainParticleSettings.speedModifier;
+      context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
+      this.draw(context, mappedImage);
     }// ==============================
 
     updateMovement() {
         let movement = (1.9 - this.speed) + this.velocity;
-        // movement /= 3;
+        
         switch (this.rainParticleSettings.direction) {
             case 'up':
                 this.y -= movement;

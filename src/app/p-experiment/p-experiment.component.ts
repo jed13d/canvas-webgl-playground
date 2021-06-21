@@ -132,9 +132,9 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   private debug(message?: any, ...optionalParams: any) {
     if(environment.debugging) {
       if(optionalParams.length > 0) {
-        this.globalService.debug("PIntroComponent:\n", message, optionalParams);
+        this.globalService.debug("PExperimentComponent:\n", message, optionalParams);
       } else {
-        this.globalService.debug("PIntroComponent:\n".concat(message));
+        this.globalService.debug("PExperimentComponent:\n".concat(message));
       }// =====
     }// =====
   }// ==============================

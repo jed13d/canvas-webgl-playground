@@ -11,13 +11,21 @@ import { MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/
 export class PRainComponent implements AfterViewInit {
 
   @ViewChild('Canvas')
-  private mainCanvas!: ElementRef<HTMLCanvasElement>;
+  private canvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
 
   private image: HTMLImageElement = new Image();
   private particlesArray: RainParticle[] = [];
   private numberOfParticles = 10000;
+  private desiredNumberOfPixels: number = 250000;
   private mappedImage: MappedPixel[][] = [];
+
+  /**
+   * Form bound variables
+   */
+  @ViewChild('UsePresetCB')
+  private usePresetCB!: ElementRef<HTMLInputElement>;
+  private usePresetFlag: boolean = true;
 
   /**
    * Preset settings for rain particles.
@@ -26,53 +34,72 @@ export class PRainComponent implements AfterViewInit {
      "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
   ];
   private selectedRainParticleSettings: number = 0;
-  private rainParticleSettings: RainParticleSettings[] = [
+  rainParticleSettings: RainParticleSettings[] = [
     {   // 0 - b&w "brightness" "default"
-      color: this.selectedRainParticleSettings,
+      color: 0,
       direction: "down",
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      name: "B&W Brightness",
       sizeModifier:  1.75,
       speedModifier: 0.5,
       velocityModifier: 0.5,
     },
     {   // 1 - color rainy window effect
-      color: this.selectedRainParticleSettings,
+      color: 1,
       direction: "down",
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      name: "Rainy Window",
       sizeModifier:  Math.random() * 5,
       speedModifier: 0.75,
       velocityModifier: 0.5,
     }
-  ];
+  ];// =====
+  customRainParticleSettings: RainParticleSettings = {
+    color: this.selectedRainParticleSettings,
+    direction: "down",
+    globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+    name: "B&W Brightness",
+    sizeModifier:  1.75,
+    speedModifier: 0.5,
+    velocityModifier: 0.5,
+  };
 
   constructor(
-    private globalService: GlobalService,) {}
+    private globalService: GlobalService,) {
+      this.image.src = environment.imageSrc;
+  }// ==============================
 
   ngAfterViewInit(): void {
-    this.image.src = environment.imageSrc;
-
-    this.context = this.mainCanvas.nativeElement.getContext('2d');
-    this.mainCanvas.nativeElement.height = this.image.height * 2;
-    this.mainCanvas.nativeElement.width = this.image.width * 2;
-    this.numberOfParticles = (this.mainCanvas.nativeElement.height * this.mainCanvas.nativeElement.width) / 10;
-    this.globalService.debug("Number of particles:", this.numberOfParticles);
-
-    this.pixelRain();
+    this.usePresetCB.nativeElement.checked = this.usePresetFlag;
+    this.setupLoadListener();
   }// ==============================
 
-  private pixelRain() {
-    this.image.addEventListener('load', () => {
-      this.globalService.drawImage(this.context!, this.image, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
-      this.rpInit();
-      this.rpAnimate();
-    });
+  selectCustomRainParticleSettings(): void {
+    if(this.usePresetFlag) {
+      this.usePresetFlag = this.usePresetCB.nativeElement.checked = false;
+    }// =====
+    this.setRainParticleSettings();
   }// ==============================
 
-  private rpAnimate() {
+  selectPresetRainParticleSettings(index: number): void  {
+    this.debug("index argument: "+ index);
+    if(!this.usePresetFlag) {
+      this.usePresetFlag = this.usePresetCB.nativeElement.checked = true;
+    }// =====
+    this.selectedRainParticleSettings = index;
+    this.setRainParticleSettings();
+  }// ==============================
+
+  toggleUsePresetFlag(): void  {
+    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
+    this.setRainParticleSettings();
+  }// ==============================
+
+  private animate(): void  {
     this.context!.globalAlpha = 0.05;
 
     this.context!.fillStyle = 'rgb(0, 0, 0)';
-    this.context!.fillRect(0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
+    this.context!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let alphaModifier = 0.05;
     for(let i = 0; i < this.particlesArray.length; i++) {
@@ -80,18 +107,68 @@ export class PRainComponent implements AfterViewInit {
       this.context!.globalAlpha = (this.particlesArray[i].getSpeed() * alphaModifier);
     }// =====
     requestAnimationFrame(() => {
-      this.rpAnimate();
-    });
+      this.animate();
+    });// =====
   }// ==============================
 
-  private rpInit() {
-    /**
-     * Initialize this.mappedImage with MappedPixels
-     */
-    let pixels = this.context!.getImageData(0, 0, this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height);
-    for(let y = 0; y < this.mainCanvas.nativeElement.height; y++) {
+  /**
+   * Wrapper method around console.log to output only when in debugging mode.
+   * It's parameters are set up just like console.log for ease of use.
+   * @param message
+   * @param optionalParams
+   */
+  private debug(message?: any, ...optionalParams: any) {
+    if(environment.debugging) {
+      if(optionalParams.length > 0) {
+        this.globalService.debug("PRainComponent:\n", message, optionalParams);
+      } else {
+        this.globalService.debug("PRainComponent:\n".concat(message));
+      }// =====
+    }// =====
+  }// ==============================
+
+  private initializeRainParticles(): void  {
+    for(let i = 0; i < this.numberOfParticles; i++) {
+      this.particlesArray.push(new RainParticle(this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.rainParticleSettings[this.selectedRainParticleSettings]));
+    }// =====
+  }// ==============================
+
+  private setRainParticleSettings(): void {
+    let tempSettingsObj = this.usePresetFlag ? this.rainParticleSettings[this.selectedRainParticleSettings] : this.customRainParticleSettings;
+    for(let i = 0; i < this.numberOfParticles; i++) {
+      this.particlesArray[i].setRainParticleSettings(tempSettingsObj);
+    }// =====
+  }// ==============================
+
+  private setupCanvas(): void {
+    let pixelCount = this.image.width * this.image.height;
+    let imageScaler: number = 1;
+    if(pixelCount > this.desiredNumberOfPixels) {
+      imageScaler = Math.floor(pixelCount / this.desiredNumberOfPixels) / 2;
+      imageScaler = (imageScaler > 0) ? imageScaler : 1;
+      this.canvas!.nativeElement.width = this.image.width / imageScaler;
+      this.canvas!.nativeElement.height = this.image.width / imageScaler;
+    } else if(pixelCount < this.desiredNumberOfPixels) {
+      imageScaler = Math.floor(this.desiredNumberOfPixels / pixelCount) / 2;
+      imageScaler = (imageScaler > 0) ? imageScaler : 1;
+      this.canvas!.nativeElement.width = this.image.width * imageScaler;
+      this.canvas!.nativeElement.height = this.image.width * imageScaler;
+    }// =====
+
+    this.numberOfParticles = (this.canvas.nativeElement.height * this.canvas.nativeElement.width) / 10;
+
+    this.context = this.canvas!.nativeElement.getContext('2d');
+    this.debug("canvas: "+ this.canvas!.nativeElement.width +", "+ this.canvas!.nativeElement.height +", "+ imageScaler);
+  }// ==============================
+
+  /**
+   * Initialize this.mappedImage with MappedPixels
+   */
+  private setupImageMapping() {
+    let pixels = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    for(let y = 0; y < this.canvas.nativeElement.height; y++) {
       let row: MappedPixel[] = [];
-      for(let x = 0; x < this.mainCanvas.nativeElement.width; x++) {
+      for(let x = 0; x < this.canvas.nativeElement.width; x++) {
         let red = pixels.data[(y * 4 * pixels.width) + (x * 4)];
         let green = pixels.data[(y * 4 * pixels.width) + (x * 4 + 1)];
         let blue = pixels.data[(y * 4 * pixels.width) + (x * 4 + 2)];
@@ -103,10 +180,16 @@ export class PRainComponent implements AfterViewInit {
       }// =====
       this.mappedImage.push(row);
     }// =====
+  }// ==============================
 
-    for(let i = 0; i < this.numberOfParticles; i++) {
-      this.particlesArray.push(new RainParticle(this.mainCanvas.nativeElement.width, this.mainCanvas.nativeElement.height, this.rainParticleSettings[this.selectedRainParticleSettings]))
-    }// =====
+  private setupLoadListener(): void  {
+    this.image.addEventListener('load', () => {
+      this.setupCanvas();
+      this.globalService.drawImage(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      this.setupImageMapping();
+      this.initializeRainParticles();
+      this.animate();
+    });// =====
   }// ==============================
 
 }// ==============================
