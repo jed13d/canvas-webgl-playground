@@ -47,6 +47,15 @@
           </select>
         </div>
 
+        <div class="form-inline form-group col-12">
+          <label class="nav-link col-2" for="CompositeOperationOptionsDropdown">
+            <span class="bi bi-info-circle" placement="right" ngbTooltip="Select composite operation option."></span>&nbsp;
+          </label>
+          <select id="CompositeOperationOptionsDropdown" class="form-select col-10" (change)="selectGlobalCompositeOperationOptions($event)">
+            <option *ngFor="let gcoOption of globalCompositeOperationOptions" [selected]="gcoOption == customRainParticleSettings.globalCompositeOperationOptions" [value]="gcoOption">{{gcoOption}}</option>
+          </select>
+        </div>
+
       </div>
     </div>
 

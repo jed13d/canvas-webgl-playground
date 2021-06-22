@@ -30,8 +30,10 @@ export class PRainComponent implements AfterViewInit {
   /**
    * Preset settings for rain particles.
    */
-  private globalCompositeOperationOptions: string[] = [
-     "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
+  globalCompositeOperationOptions: string[] = [
+     "source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy",
+     "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue",
+     "saturation", "color", "luminosity"
   ];
   selectedRainParticleSettings: number = 0;
   rainParticleSettings: RainParticleSettings[] = [
@@ -49,7 +51,7 @@ export class PRainComponent implements AfterViewInit {
       direction: "down",
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "Rainy Window",
-      sizeModifier:  Math.random() * 50,
+      sizeModifier:  5,
       speedModifier: 0.75,
       velocityModifier: 0.5,
     }
@@ -109,6 +111,12 @@ export class PRainComponent implements AfterViewInit {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = false;
     }// =====
     this.setRainParticleSettings();
+  }// ==============================
+
+  selectGlobalCompositeOperationOptions(event: Event): void {
+    this.debug((<HTMLSelectElement>event.target).value);
+    this.customRainParticleSettings.globalCompositeOperationOptions = (<HTMLSelectElement>event.target).value;
+    this.selectCustomRainParticleSettings();
   }// ==============================
 
   selectPresetRainParticleSettings(event: Event): void  {
@@ -178,13 +186,13 @@ export class PRainComponent implements AfterViewInit {
   if(this.image.height > this.desiredHeight) {
     imageScaler = Math.floor(this.image.height / this.desiredHeight);
     imageScaler = (imageScaler > 0) ? imageScaler : 1;
-    this.canvas!.nativeElement.width = this.image.width / imageScaler;
-    this.canvas!.nativeElement.height = this.image.height / imageScaler;
+    this.canvas!.nativeElement.width = this.image.naturalWidth / imageScaler;
+    this.canvas!.nativeElement.height = this.image.naturalHeight / imageScaler;
   } else {
     imageScaler = Math.floor(this.desiredHeight / this.image.height);
     imageScaler = (imageScaler > 0) ? imageScaler : 1;
-    this.canvas!.nativeElement.width = this.image.width * imageScaler;
-    this.canvas!.nativeElement.height = this.image.height * imageScaler;
+    this.canvas!.nativeElement.width = this.image.naturalWidth * imageScaler;
+    this.canvas!.nativeElement.height = this.image.naturalHeight * imageScaler;
   }// =====
 
     this.globalService.debug("Number of Particles: ".concat(this.numberOfParticles.toString()));
