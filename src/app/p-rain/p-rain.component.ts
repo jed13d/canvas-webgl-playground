@@ -97,6 +97,12 @@ export class PRainComponent implements AfterViewInit {
     this.selectCustomRainParticleSettings();
   }// ==============================
 
+  selectCustomGlobalCompositeOperationOptions(event: Event): void {
+    this.debug((<HTMLSelectElement>event.target).value);
+    this.customRainParticleSettings.globalCompositeOperationOptions = (<HTMLSelectElement>event.target).value;
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
   /**
    * Sets the customRainParticleSettings to use the mapped image for colors.
    * Alternate to selectCustomBlackAndWhite.
@@ -113,9 +119,9 @@ export class PRainComponent implements AfterViewInit {
     this.setRainParticleSettings();
   }// ==============================
 
-  selectGlobalCompositeOperationOptions(event: Event): void {
-    this.debug((<HTMLSelectElement>event.target).value);
-    this.customRainParticleSettings.globalCompositeOperationOptions = (<HTMLSelectElement>event.target).value;
+  selectCustomSize(value: string) {
+    this.debug("Selected Size: ".concat(value));
+    this.customRainParticleSettings.sizeModifier = parseInt(value);
     this.selectCustomRainParticleSettings();
   }// ==============================
 
