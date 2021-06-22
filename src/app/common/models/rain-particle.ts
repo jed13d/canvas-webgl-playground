@@ -47,32 +47,65 @@ export class RainParticle {
       switch (this.rainParticleSettings.direction) {
 
         case 'down-left':
+          if(Math.random() >= 0.5) {
+            this.x = this.canvasWidth - 1;
+            this.y = Math.random() * this.canvasHeight;
+          } else {
+            this.x = Math.random() * this.canvasWidth;
+            this.y = 0;
+          }
           break;
 
         case 'down-right':
-          break;
-
-        case 'up-left':
-          break;
-
-        case 'up-right':
+          if(Math.random() >= 0.5) {
+            this.x = 0;
+            this.y = Math.random() * this.canvasHeight;
+          } else {
+            this.x = Math.random() * this.canvasWidth;
+            this.y = 0;
+          }
           break;
 
         case 'left':
+          this.x = this.canvasWidth - 1;
+          this.y = Math.random() * this.canvasHeight;
           break;
 
         case 'right':
+          this.x = 0;
+          this.y = Math.random() * this.canvasHeight;
           break;
 
         case 'up':
-          this.y = this.canvasHeight - 1;
           this.x = Math.random() * this.canvasWidth;
+          this.y = this.canvasHeight - 1;
+          break;
+
+        case 'up-left':
+          if(Math.random() >= 0.5) {
+            this.x = this.canvasWidth - 1;
+            this.y = Math.random() * this.canvasHeight;
+          } else {
+            this.x = Math.random() * this.canvasWidth;
+            this.y = this.canvasHeight - 1;
+          }
+          break;
+
+        case 'up-right':
+        this.x = Math.random() * this.canvasWidth;
+          if(Math.random() >= 0.5) {
+            this.x = 0;
+            this.y = Math.random() * this.canvasHeight;
+          } else {
+            this.x = Math.random() * this.canvasWidth;
+            this.y = this.canvasHeight - 1;
+          }
           break;
 
         default:
         case 'down':
-          this.y = 0;
           this.x = Math.random() * this.canvasWidth;
+          this.y = 0;
           break;
       }// =====
     }// ==============================
@@ -85,7 +118,6 @@ export class RainParticle {
       this.updateMovement();
       this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * Math.random();
       context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
-      // context.globalAlpha = this.speed;
       this.draw(context, mappedImage);
     }// ==============================
 
@@ -95,32 +127,40 @@ export class RainParticle {
       switch (this.rainParticleSettings.direction) {
 
         case 'down-left':
+          this.x -= movement;
+          this.y += movement;
           break;
 
         case 'down-right':
-          break;
-
-        case 'up-left':
-          break;
-
-        case 'up-right':
+          this.x += movement;
+          this.y += movement;
           break;
 
         case 'left':
+          this.x -= movement;
           break;
 
         case 'right':
+          this.x += movement;
           break;
 
         case 'up':
           this.y -= movement;
-          // if(this.y <= 0) this.resetPosition();
+          break;
+
+        case 'up-left':
+          this.x -= movement;
+          this.y -= movement;
+          break;
+
+        case 'up-right':
+          this.x += movement;
+          this.y -= movement;
           break;
 
         default:
         case 'down':
           this.y += movement;
-          // if(this.y >= this.canvasHeight) this.resetPosition();
           break;
       }// =====
       if(this.y >= this.canvasHeight || this.x >= this.canvasWidth

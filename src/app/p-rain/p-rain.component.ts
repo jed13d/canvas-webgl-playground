@@ -17,7 +17,7 @@ export class PRainComponent implements AfterViewInit {
   private image: HTMLImageElement = new Image();
   private particlesArray: RainParticle[] = [];
   private numberOfParticles = 10000;
-  private desiredNumberOfPixels: number = 250000;
+  private desiredHeight: number = 500;
   private mappedImage: MappedPixel[][] = [];
 
   /**
@@ -54,6 +54,9 @@ export class PRainComponent implements AfterViewInit {
       velocityModifier: 0.5,
     }
   ];// =====
+  availableDirections: string[] = [
+    "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
+  ];
   customRainParticleSettings: RainParticleSettings = {
     color: this.selectedRainParticleSettings,
     direction: "down",
@@ -76,10 +79,29 @@ export class PRainComponent implements AfterViewInit {
 
   /**
    * Sets the customRainParticleSettings to use white particles.
-   * Alternate to selectMappedColors.
+   * Alternate to selectCustomMappedColors.
    */
-  selectBlackAndWhite(): void {
+  selectCustomBlackAndWhite(): void {
     this.customRainParticleSettings.color = 0;
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+    /**
+     * Sets the direction which the particles will flow towards.
+     */
+  selectCustomDirection(event: Event): void {
+    this.debug((<HTMLSelectElement>event.target).value);
+    this.customRainParticleSettings.direction = (<HTMLSelectElement>event.target).value;
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+  /**
+   * Sets the customRainParticleSettings to use the mapped image for colors.
+   * Alternate to selectCustomBlackAndWhite.
+   */
+  selectCustomMappedColors(): void {
+    this.customRainParticleSettings.color = 1;
+    this.selectCustomRainParticleSettings();
   }// ==============================
 
   selectCustomRainParticleSettings(): void {
@@ -87,14 +109,6 @@ export class PRainComponent implements AfterViewInit {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = false;
     }// =====
     this.setRainParticleSettings();
-  }// ==============================
-
-  /**
-   * Sets the customRainParticleSettings to use the mapped image for colors.
-   * Alternate to selectBlackAndWhite.
-   */
-  selectMappedColors(): void {
-    this.customRainParticleSettings.color = 1;
   }// ==============================
 
   selectPresetRainParticleSettings(event: Event): void  {
@@ -159,19 +173,19 @@ export class PRainComponent implements AfterViewInit {
   }// ==============================
 
   private setupCanvas(): void {
-    let pixelCount = this.image.width * this.image.height;
-    let imageScaler: number = 1;
-    if(pixelCount > this.desiredNumberOfPixels) {
-      imageScaler = Math.floor(pixelCount / this.desiredNumberOfPixels) / 2;
-      imageScaler = (imageScaler > 0) ? imageScaler : 1;
-      this.canvas!.nativeElement.width = this.image.width / imageScaler;
-      this.canvas!.nativeElement.height = this.image.width / imageScaler;
-    } else if(pixelCount < this.desiredNumberOfPixels) {
-      imageScaler = Math.floor(this.desiredNumberOfPixels / pixelCount) / 2;
-      imageScaler = (imageScaler > 0) ? imageScaler : 1;
-      this.canvas!.nativeElement.width = this.image.width * imageScaler;
-      this.canvas!.nativeElement.height = this.image.width * imageScaler;
-    }// =====
+
+  let imageScaler: number = 1;
+  if(this.image.height > this.desiredHeight) {
+    imageScaler = Math.floor(this.image.height / this.desiredHeight);
+    imageScaler = (imageScaler > 0) ? imageScaler : 1;
+    this.canvas!.nativeElement.width = this.image.width / imageScaler;
+    this.canvas!.nativeElement.height = this.image.height / imageScaler;
+  } else {
+    imageScaler = Math.floor(this.desiredHeight / this.image.height);
+    imageScaler = (imageScaler > 0) ? imageScaler : 1;
+    this.canvas!.nativeElement.width = this.image.width * imageScaler;
+    this.canvas!.nativeElement.height = this.image.height * imageScaler;
+  }// =====
 
     this.globalService.debug("Number of Particles: ".concat(this.numberOfParticles.toString()));
 
