@@ -1,18 +1,16 @@
 <div id="SideBar" class="bg-info text-white col-2">
   <form>
+
     <div class="form-row">
 
       <div class="form-inline form-group col-12">
-        <label class="nav-link" for="PresetDropdown">
+        <label class="nav-link col-2" for="PresetDropdown">
           <input class="form-check-input" type="checkbox" id="UsePresetCB" (change)="toggleUsePresetFlag()" #UsePresetCB>
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select the preset option of your choice."></span>&nbsp;
         </label>
-        <div ngbDropdown class="d-inline-block">
-          <button type="button" class="btn btn-outline-dark" id="PresetDropdown" ngbDropdownToggle>Presets</button>
-          <div ngbDropdownMenu aria-labelledby="PresetDropdown">
-            <button type="button" ngbDropdownItem *ngFor="let settingsObj of rainParticleSettings; let i = index" (click)="selectPresetRainParticleSettings(i)">{{settingsObj.name}}</button>
-          </div>
-        </div>
+        <select id="PresetDropdown" ng-model="selectedRainParticleSettings" class="form-select col-10" (change)="selectPresetRainParticleSettings($event)">
+          <option *ngFor="let settingsObj of rainParticleSettings; let i = index" [selected]="selectedRainParticleSettings == i" [value]="i">{{settingsObj.name}}</option>
+        </select>
       </div>
 
       <!-- <div class="form-group col-12">
@@ -43,35 +41,28 @@
       </div> -->
 
     </div>
-    <!-- <fieldset class="form-group col-12">
+    <fieldset class="form-group col-12">
       <div class="form-row col-12">
 
-        <div class="form-check col-12">
-          <input id="OriginalRadio" class="form-check-input" name="Presets" type="radio" (change)="selectOriginal()">
+        <div class="form-check col-6">
+          <input id="BlackAndWhiteRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectBlackAndWhite()">
           <label class="form-check-label" for="OriginalRadio">
-            &nbsp;Original&nbsp;
+            &nbsp;Black and White&nbsp;
             <span class="bi bi-info-circle"></span>&nbsp;
           </label>
         </div>
 
-        <div class="form-check col-12">
-          <input id="InvertRadio" class="form-check-input" name="Presets" type="radio" (change)="selectInvert()">
+        <div class="form-check col-6">
+          <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectMappedColors()">
           <label class="form-check-label" for="InvertRadio">
-            &nbsp;Invert&nbsp;
-            <span class="bi bi-info-circle"></span>&nbsp;
-          </label>
-        </div>
-
-        <div class="form-check col-12">
-          <input id="SepiaRadio" class="form-check-input" name="Presets" type="radio" (change)="selectSepia()">
-          <label class="form-check-label" for="SepiaRadio">
-            &nbsp;Sepia&nbsp;
+            &nbsp;Color&nbsp;
             <span class="bi bi-info-circle"></span>&nbsp;
           </label>
         </div>
 
       </div>
-    </fieldset> -->
+    </fieldset>
+
   </form>
 </div>
 

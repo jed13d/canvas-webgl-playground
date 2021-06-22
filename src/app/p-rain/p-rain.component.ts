@@ -33,7 +33,7 @@ export class PRainComponent implements AfterViewInit {
   private globalCompositeOperationOptions: string[] = [
      "source-over", "xor", "overlay", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
   ];
-  private selectedRainParticleSettings: number = 0;
+  selectedRainParticleSettings: number = 0;
   rainParticleSettings: RainParticleSettings[] = [
     {   // 0 - b&w "brightness" "default"
       color: 0,
@@ -49,7 +49,7 @@ export class PRainComponent implements AfterViewInit {
       direction: "down",
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "Rainy Window",
-      sizeModifier:  Math.random() * 5,
+      sizeModifier:  Math.random() * 50,
       speedModifier: 0.75,
       velocityModifier: 0.5,
     }
@@ -74,6 +74,14 @@ export class PRainComponent implements AfterViewInit {
     this.setupLoadListener();
   }// ==============================
 
+  /**
+   * Sets the customRainParticleSettings to use white particles.
+   * Alternate to selectMappedColors.
+   */
+  selectBlackAndWhite(): void {
+    this.customRainParticleSettings.color = 0;
+  }// ==============================
+
   selectCustomRainParticleSettings(): void {
     if(this.usePresetFlag) {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = false;
@@ -81,12 +89,20 @@ export class PRainComponent implements AfterViewInit {
     this.setRainParticleSettings();
   }// ==============================
 
-  selectPresetRainParticleSettings(index: number): void  {
-    this.debug("index argument: "+ index);
+  /**
+   * Sets the customRainParticleSettings to use the mapped image for colors.
+   * Alternate to selectBlackAndWhite.
+   */
+  selectMappedColors(): void {
+    this.customRainParticleSettings.color = 1;
+  }// ==============================
+
+  selectPresetRainParticleSettings(event: Event): void  {
+    this.debug((<HTMLSelectElement>event.target).value);
     if(!this.usePresetFlag) {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = true;
     }// =====
-    this.selectedRainParticleSettings = index;
+    this.selectedRainParticleSettings = parseInt((<HTMLSelectElement>event.target).value);
     this.setRainParticleSettings();
   }// ==============================
 
@@ -98,13 +114,14 @@ export class PRainComponent implements AfterViewInit {
   private animate(): void  {
     this.context!.globalAlpha = 0.05;
 
-    this.context!.fillStyle = 'rgb(0, 0, 0)';
+    this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.context!.fillStyle = 'rgb(0, 0, 0, 1)';
     this.context!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let alphaModifier = 0.05;
     for(let i = 0; i < this.particlesArray.length; i++) {
-      this.particlesArray[i].update(this.context!, this.mappedImage);
       this.context!.globalAlpha = (this.particlesArray[i].getSpeed() * alphaModifier);
+      this.particlesArray[i].update(this.context!, this.mappedImage);
     }// =====
     requestAnimationFrame(() => {
       this.animate();
@@ -120,7 +137,7 @@ export class PRainComponent implements AfterViewInit {
   private debug(message?: any, ...optionalParams: any) {
     if(environment.debugging) {
       if(optionalParams.length > 0) {
-        this.globalService.debug("PRainComponent:\n", message, optionalParams);
+        this.globalService.debug("PRainComponent:\n".concat(message), optionalParams);
       } else {
         this.globalService.debug("PRainComponent:\n".concat(message));
       }// =====
@@ -134,6 +151,7 @@ export class PRainComponent implements AfterViewInit {
   }// ==============================
 
   private setRainParticleSettings(): void {
+    this.debug(this.selectedRainParticleSettings);
     let tempSettingsObj = this.usePresetFlag ? this.rainParticleSettings[this.selectedRainParticleSettings] : this.customRainParticleSettings;
     for(let i = 0; i < this.numberOfParticles; i++) {
       this.particlesArray[i].setRainParticleSettings(tempSettingsObj);
@@ -155,7 +173,7 @@ export class PRainComponent implements AfterViewInit {
       this.canvas!.nativeElement.height = this.image.width * imageScaler;
     }// =====
 
-    this.numberOfParticles = (this.canvas.nativeElement.height * this.canvas.nativeElement.width) / 10;
+    this.globalService.debug("Number of Particles: ".concat(this.numberOfParticles.toString()));
 
     this.context = this.canvas!.nativeElement.getContext('2d');
     this.debug("canvas: "+ this.canvas!.nativeElement.width +", "+ this.canvas!.nativeElement.height +", "+ imageScaler);
@@ -180,6 +198,8 @@ export class PRainComponent implements AfterViewInit {
       }// =====
       this.mappedImage.push(row);
     }// =====
+
+    console.debug(this.mappedImage);
   }// ==============================
 
   private setupLoadListener(): void  {
@@ -187,6 +207,7 @@ export class PRainComponent implements AfterViewInit {
       this.setupCanvas();
       this.globalService.drawImage(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.setupImageMapping();
+      this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.initializeRainParticles();
       this.animate();
     });// =====
