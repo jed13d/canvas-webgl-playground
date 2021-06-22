@@ -43,7 +43,6 @@ export class PRainComponent implements AfterViewInit {
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "B&W Brightness",
       sizeModifier:  1.75,
-      speedModifier: 0.5,
       velocityModifier: 0.5,
     },
     {   // 1 - color rainy window effect
@@ -52,7 +51,6 @@ export class PRainComponent implements AfterViewInit {
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "Rainy Window",
       sizeModifier:  5,
-      speedModifier: 0.75,
       velocityModifier: 0.5,
     }
   ];// =====
@@ -65,7 +63,6 @@ export class PRainComponent implements AfterViewInit {
     globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
     name: "B&W Brightness",
     sizeModifier:  1.75,
-    speedModifier: 0.5,
     velocityModifier: 0.5,
   };
 
@@ -121,12 +118,18 @@ export class PRainComponent implements AfterViewInit {
 
   selectCustomSize(value: string) {
     this.debug("Selected Size: ".concat(value));
-    this.customRainParticleSettings.sizeModifier = parseInt(value);
+    this.customRainParticleSettings.sizeModifier = parseFloat(value);
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+  selectCustomSpeed(value: string) {
+    this.debug("Selected Speed: ".concat(value));
+    this.customRainParticleSettings.velocityModifier = parseFloat(value);
     this.selectCustomRainParticleSettings();
   }// ==============================
 
   selectPresetRainParticleSettings(event: Event): void  {
-    this.debug((<HTMLSelectElement>event.target).value);
+    this.debug("Preset selected: ".concat((<HTMLSelectElement>event.target).value));
     if(!this.usePresetFlag) {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = true;
     }// =====
@@ -179,7 +182,6 @@ export class PRainComponent implements AfterViewInit {
   }// ==============================
 
   private setRainParticleSettings(): void {
-    this.debug(this.selectedRainParticleSettings);
     let tempSettingsObj = this.usePresetFlag ? this.rainParticleSettings[this.selectedRainParticleSettings] : this.customRainParticleSettings;
     for(let i = 0; i < this.numberOfParticles; i++) {
       this.particlesArray[i].setRainParticleSettings(tempSettingsObj);
