@@ -16,19 +16,21 @@ export class PRainComponent implements AfterViewInit {
 
   private image: HTMLImageElement = new Image();
   private particlesArray: RainParticle[] = [];
-  private numberOfParticles = 10000;
+  private numberOfParticles = 15000;
   private desiredHeight: number = 500;
   private mappedImage: MappedPixel[][] = [];
 
-  /**
-   * Form bound variables
-   */
   @ViewChild('UsePresetCB')
   private usePresetCB!: ElementRef<HTMLInputElement>;
   private usePresetFlag: boolean = true;
 
+  @ViewChild('ClearCanvasCB')
+  private clearCanvasCB!: ElementRef<HTMLInputElement>;
+  private clearCanvasFlag: boolean = false;
+
   /**
    * Preset settings for rain particles.
+   * Also all custom settings and variables for UI.
    */
   globalCompositeOperationOptions: string[] = [
      "source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy",
@@ -61,7 +63,7 @@ export class PRainComponent implements AfterViewInit {
     color: this.selectedRainParticleSettings,
     direction: "down",
     globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-    name: "B&W Brightness",
+    name: "Custom Settings",
     sizeModifier:  1.75,
     velocityModifier: 0.5,
   };
@@ -73,6 +75,7 @@ export class PRainComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.usePresetCB.nativeElement.checked = this.usePresetFlag;
+    this.clearCanvasCB
     this.setupLoadListener();
   }// ==============================
 
@@ -142,10 +145,16 @@ export class PRainComponent implements AfterViewInit {
     this.setRainParticleSettings();
   }// ==============================
 
+  toggleClearCanvasFlag(): void {
+    this.clearCanvasFlag = this.clearCanvasCB.nativeElement.checked;
+  }// ==============================
+
   private animate(): void  {
     this.context!.globalAlpha = 0.05;
 
-    this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    if(this.clearCanvasFlag) {
+      this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    }
     this.context!.fillStyle = 'rgb(0, 0, 0, 1)';
     this.context!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
@@ -237,7 +246,6 @@ export class PRainComponent implements AfterViewInit {
       this.setupCanvas();
       this.globalService.drawImage(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.setupImageMapping();
-      this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.initializeRainParticles();
       this.animate();
     });// =====
