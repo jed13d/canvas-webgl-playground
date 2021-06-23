@@ -1,38 +1,42 @@
 <div id="SideBar" class="bg-info text-white col-2">
   <form>
-    <div class="form-row">
+    <div class="form-group">
 
-      <div class="form-group col-12">
-        <label class="nav-link" for="AverageRangeInput">
-          <input class="form-check-input" type="checkbox" id="AverageUsedWithColorCB" (change)="toggleAverageUsedFlag()" #AverageUsedWithColorCB>
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Tooltip on top"></span>&nbsp;
+      <!-- Gray Modifier Range and Checkbox -->
+      <div>
+        <label for="AverageRangeInput">
+          <span class="bi bi-info-circle mr-1" placement="right" ngbTooltip="Tooltip on top"></span>
           Gray Modifier: {{averageModifier}}
+          <input class="form-check-input ml-4" type="checkbox" id="AverageUsedWithColorCB" (change)="toggleAverageUsedFlag()" #AverageUsedWithColorCB>
         </label>
         <input id="AverageRangeInput" type="range" class="form-control-range" min="-100" max="100"
           (change)="updateAverageModifier(AverageRangeInput.value)" value="0" #AverageRangeInput>
       </div>
 
-      <div class="form-group col-12">
-        <label class="nav-link" for="RedRangeInput">
-          <span class="bi bi-info-circle"></span>&nbsp;
+      <!-- Red Modifier Range -->
+      <div>
+        <label for="RedRangeInput">
+          <span class="bi bi-info-circle mr-1" placement="right" ngbTooltip="Tooltip on top"></span>
           Red Modifier: {{redModifier}}
         </label>
         <input id="RedRangeInput" type="range" class="form-control-range" min="-100" max="100"
           (change)="updateRedModifier(RedRangeInput.value)" value="0" #RedRangeInput>
       </div>
 
-      <div class="form-group col-12">
-        <label class="nav-link" for="GreenRangeInput">
-          <span class="bi bi-info-circle"></span>&nbsp;
+      <!-- Green Modifier Range -->
+      <div>
+        <label for="GreenRangeInput">
+          <span class="bi bi-info-circle mr-1" placement="right" ngbTooltip="Tooltip on top"></span>
           Green Modifier: {{greenModifier}}
         </label>
         <input id="GreenRangeInput" type="range" class="form-control-range" min="-100" max="100"
           (change)="updateGreenModifier(GreenRangeInput.value)" value="0" #GreenRangeInput>
       </div>
 
-      <div class="form-group col-12">
-        <label class="nav-link" for="BlueRangeInput">
-          <span class="bi bi-info-circle"></span>&nbsp;
+      <!-- Blue Modifier Range -->
+      <div>
+        <label for="BlueRangeInput">
+          <span class="bi bi-info-circle mr-1" placement="right" ngbTooltip="Tooltip on top"></span>
           Blue Modifier: {{blueModifier}}
         </label>
         <input id="BlueRangeInput" type="range" class="form-control-range" min="-100" max="100"
@@ -40,34 +44,35 @@
       </div>
 
     </div>
-    <fieldset class="form-group col-12">
-      <div class="form-row col-12">
+    <fieldset class="form-group">
 
-        <div class="form-check col-12">
-          <input id="OriginalRadio" class="form-check-input" name="Presets" type="radio" (change)="selectOriginal()">
-          <label class="form-check-label" for="OriginalRadio">
-            &nbsp;Original&nbsp;
-            <span class="bi bi-info-circle"></span>&nbsp;
-          </label>
-        </div>
-
-        <div class="form-check col-12">
-          <input id="InvertRadio" class="form-check-input" name="Presets" type="radio" (change)="selectInvert()">
-          <label class="form-check-label" for="InvertRadio">
-            &nbsp;Invert&nbsp;
-            <span class="bi bi-info-circle"></span>&nbsp;
-          </label>
-        </div>
-
-        <div class="form-check col-12">
-          <input id="SepiaRadio" class="form-check-input" name="Presets" type="radio" (change)="selectSepia()">
-          <label class="form-check-label" for="SepiaRadio">
-            &nbsp;Sepia&nbsp;
-            <span class="bi bi-info-circle"></span>&nbsp;
-          </label>
-        </div>
-
+      <!-- Original Radio -->
+      <div class="form-check">
+        <input id="OriginalRadio" class="form-check-input" name="Presets" type="radio" (change)="selectOriginal()">
+        <label class="form-check-label" for="OriginalRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Tooltip on top"></span>
+          Original
+        </label>
       </div>
+
+      <!-- Invert Radio -->
+      <div class="form-check">
+        <input id="InvertRadio" class="form-check-input" name="Presets" type="radio" (change)="selectInvert()">
+        <label class="form-check-label" for="InvertRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Tooltip on top"></span>
+          Invert
+        </label>
+      </div>
+
+      <!-- Sepia Radio -->
+      <div class="form-check">
+        <input id="SepiaRadio" class="form-check-input" name="Presets" type="radio" (change)="selectSepia()">
+        <label class="form-check-label" for="SepiaRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Tooltip on top"></span>
+          Sepia
+        </label>
+      </div>
+
     </fieldset>
   </form>
 </div>

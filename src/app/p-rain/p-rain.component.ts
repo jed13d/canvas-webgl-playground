@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
 import { MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
@@ -8,7 +8,7 @@ import { MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/
   templateUrl: './p-rain.component.html',
   styleUrls: ['./p-rain.component.scss']
 })
-export class PRainComponent implements AfterViewInit {
+export class PRainComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('Canvas')
   private canvas!: ElementRef<HTMLCanvasElement>;
@@ -27,6 +27,8 @@ export class PRainComponent implements AfterViewInit {
   @ViewChild('ClearCanvasCB')
   private clearCanvasCB!: ElementRef<HTMLInputElement>;
   private clearCanvasFlag: boolean = false;
+
+  private animationId: number = 0;
 
   /**
    * Preset settings for rain particles.
@@ -75,8 +77,14 @@ export class PRainComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.usePresetCB.nativeElement.checked = this.usePresetFlag;
-    this.clearCanvasCB
+    this.clearCanvasCB.nativeElement.checked = this.clearCanvasFlag;
     this.setupLoadListener();
+  }// ==============================
+
+  ngOnDestroy(): void {
+    this.debug("ngOnDestroy");
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    cancelAnimationFrame(this.animationId);
   }// ==============================
 
   /**
@@ -125,7 +133,7 @@ export class PRainComponent implements AfterViewInit {
     this.selectCustomRainParticleSettings();
   }// ==============================
 
-  selectCustomSpeed(value: string) {
+  selectCustomSpeed(value: string): void {
     this.debug("Selected Speed: ".concat(value));
     this.customRainParticleSettings.velocityModifier = parseFloat(value);
     this.selectCustomRainParticleSettings();
@@ -163,7 +171,7 @@ export class PRainComponent implements AfterViewInit {
       this.context!.globalAlpha = (this.particlesArray[i].getSpeed() * alphaModifier);
       this.particlesArray[i].update(this.context!, this.mappedImage);
     }// =====
-    requestAnimationFrame(() => {
+    this.animationId = requestAnimationFrame(() => {
       this.animate();
     });// =====
   }// ==============================
@@ -174,7 +182,7 @@ export class PRainComponent implements AfterViewInit {
    * @param message
    * @param optionalParams
    */
-  private debug(message?: any, ...optionalParams: any) {
+  private debug(message?: any, ...optionalParams: any): void {
     if(environment.debugging) {
       if(optionalParams.length > 0) {
         this.globalService.debug("PRainComponent:\n".concat(message), optionalParams);
@@ -221,7 +229,7 @@ export class PRainComponent implements AfterViewInit {
   /**
    * Initialize this.mappedImage with MappedPixels
    */
-  private setupImageMapping() {
+  private setupImageMapping(): void {
     let pixels = this.context!.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     for(let y = 0; y < this.canvas.nativeElement.height; y++) {
       let row: MappedPixel[] = [];

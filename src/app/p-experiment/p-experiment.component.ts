@@ -32,35 +32,36 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   }// ==============================
 
   ngAfterContentChecked(): void {
-    this.debug("AfterContentChecked");
+    this.debug("ngAfterContentChecked");
   }// ==============================
 
   ngAfterContentInit(): void {
-    this.debug("AfterContentInit");
+    this.debug("ngAfterContentInit");
   }// ==============================
 
   ngAfterViewChecked(): void {
-    this.debug("AfterViewChecked");
+    this.debug("ngAfterViewChecked");
   }// ==============================
 
   /**
    * context doesn't exist until here
    */
   ngAfterViewInit(): void {
-    this.debug("AfterViewInit");
+    this.debug("ngAfterViewInit");
     this.setupLoadListener();
   }// ==============================
 
   ngOnChanges(): void {
-    this.globalService.debug("experiment-OnChanges");
+    this.debug("ngOnChanges");
   }// ==============================
 
   ngOnDestroy(): void {
-    this.globalService.debug("experiment-OnDestroy");
+    this.debug("ngOnDestroy");
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }// ==============================
 
   ngOnInit(): void {
-    this.globalService.debug("experiment-OnInit");
+    this.debug("ngOnInit");
   }// ==============================
 
   selectInvert(): void {
@@ -99,26 +100,26 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   }// ==============================
 
   updateAverageModifier(value: string): void {
-    this.globalService.debug("updateAverageModifier - value:".concat(' ', value));
+    this.debug("updateAverageModifier - value:".concat(' ', value));
     this.averageModifier = parseInt(value);
     this.averageUsedWithColorCB!.nativeElement.checked = true;
     this.globalService.applyGrayscale(this.context!, this.image, this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.averageModifier);
   }// ==============================
 
   updateRedModifier(value: string): void {
-    this.globalService.debug("updateRedModifier - value:", value);
+    this.debug("updateRedModifier - value:", value);
     this.redModifier = parseInt(value);
     this.updateImage();
   }// ==============================
 
   updateGreenModifier(value: string): void {
-    this.globalService.debug("updateGreenModifier - value:", value);
+    this.debug("updateGreenModifier - value:", value);
     this.greenModifier = parseInt(value);
     this.updateImage();
   }// ==============================
 
   updateBlueModifier(value: string): void {
-    this.globalService.debug("updateBlueModifier - value:", value);
+    this.debug("updateBlueModifier - value:", value);
     this.blueModifier = parseInt(value);
     this.updateImage();
   }// ==============================
@@ -132,7 +133,7 @@ export class PExperimentComponent implements AfterContentChecked, AfterContentIn
   private debug(message?: any, ...optionalParams: any) {
     if(environment.debugging) {
       if(optionalParams.length > 0) {
-        this.globalService.debug("PExperimentComponent:\n", message, optionalParams);
+        this.globalService.debug("PExperimentComponent:\n".concat(message), optionalParams);
       } else {
         this.globalService.debug("PExperimentComponent:\n".concat(message));
       }// =====

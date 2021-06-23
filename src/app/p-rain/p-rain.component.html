@@ -1,89 +1,89 @@
 <div id="SideBar" class="bg-info text-white col-2">
   <form>
 
-    <div class="form-row">
+    <div class="form-group">
 
-      <div class="form-inline form-group col-12">
-        <label class="nav-link col-2" for="PresetDropdown">
+      <!-- Preset Settings Select -->
+      <div class="form-inline">
+        <label for="PresetDropdown">
           <input class="form-check-input" type="checkbox" id="UsePresetCB" (change)="toggleUsePresetFlag()" #UsePresetCB>
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select the preset option of your choice."></span>&nbsp;
+          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the preset option of your choice."></span>
         </label>
-        <select id="PresetDropdown" ng-model="selectedRainParticleSettings" class="form-select col-10" (change)="selectPresetRainParticleSettings($event)">
+        <select id="PresetDropdown" ng-model="selectedRainParticleSettings" class="custom-select custom-select-sm w-75" (change)="selectPresetRainParticleSettings($event)">
           <option *ngFor="let settingsObj of rainParticleSettings; let i = index" [selected]="selectedRainParticleSettings == i" [value]="i">{{settingsObj.name}}</option>
         </select>
       </div>
 
-    </div>
-    <div class="form-group border border-dark">
-      <fieldset class="form-group col-12 border">
-        <div class="form-row col-12">
-
-          <div class="form-check col-12">
-            <input id="BlackAndWhiteRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomBlackAndWhite()">
-            <label class="form-check-label" for="OriginalRadio">
-              &nbsp;Black and White&nbsp;
-              <span class="bi bi-info-circle"></span>&nbsp;
-            </label>
-          </div>
-
-          <div class="form-check col-12">
-            <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
-            <label class="form-check-label" for="InvertRadio">
-              &nbsp;Color&nbsp;
-              <span class="bi bi-info-circle"></span>&nbsp;
-            </label>
-          </div>
-
-        </div>
-      </fieldset>
-      <div class="form-row">
-
-        <div class="form-inline form-group col-12">
-          <label class="nav-link col-2" for="DirectionDropdown">
-            <span class="bi bi-info-circle" placement="right" ngbTooltip="Select the direction for the particles to flow."></span>&nbsp;
-          </label>
-          <select id="DirectionDropdown" class="form-select col-10" (change)="selectCustomDirection($event)">
-            <option *ngFor="let direction of availableDirections" [selected]="direction == customRainParticleSettings.direction" [value]="direction">{{direction}}</option>
-          </select>
-        </div>
-
-        <div class="form-inline form-group col-12">
-          <label class="nav-link col-2" for="CompositeOperationOptionsDropdown">
-            <span class="bi bi-info-circle" placement="right" ngbTooltip="Select composite operation option."></span>&nbsp;
-          </label>
-          <select id="CompositeOperationOptionsDropdown" class="form-select col-10" (change)="selectCustomGlobalCompositeOperationOptions($event)">
-            <option *ngFor="let gcoOption of globalCompositeOperationOptions" [selected]="gcoOption == customRainParticleSettings.globalCompositeOperationOptions" [value]="gcoOption">{{gcoOption}}</option>
-          </select>
-        </div>
-
-        <div class="form-group col-12">
-          <label class="nav-link" for="SizeRangeInput">
-            <span class="bi bi-info-circle"></span>&nbsp;
-            Particle Size: {{customRainParticleSettings.sizeModifier}}
-          </label>
-          <input id="SizeRangeInput" type="range" class="form-control-range" min="1" max="100" step="0.5"
-            (change)="selectCustomSize(SizeRangeInput.value)" value="0" #SizeRangeInput>
-        </div>
-
-        <div class="form-group col-12">
-          <label class="nav-link" for="SpeedRangeInput">
-            <span class="bi bi-info-circle"></span>&nbsp;
-            Particle Speed: {{customRainParticleSettings.velocityModifier}}
-          </label>
-          <input id="SpeedRangeInput" type="range" class="form-control-range" min="0" max="100" step="0.05"
-            (change)="selectCustomSpeed(SpeedRangeInput.value)" value="0" #SpeedRangeInput>
-        </div>
-
-        <div class="form-inline form-group col-12">
-          <label class="nav-link col-2" for="ClearCanvasCB">
-            <span class="bi bi-info-circle" placement="right" ngbTooltip="Select to clear the canvas each frame."></span>&nbsp;
-          </label>
-          <input class="form-check-input" type="checkbox" id="ClearCanvasCB" (change)="toggleClearCanvasFlag()" #ClearCanvasCB>
-          Clear Previous Frame
-        </div>
-
+      <!-- Clear Frames Checkbox -->
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="ClearCanvasCB" (change)="toggleClearCanvasFlag()" #ClearCanvasCB>
+        <label class="form-check-label" for="ClearCanvasCB">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select to clear the canvas each frame."></span>
+          Clear Frames
+        </label>
       </div>
+
     </div>
+    <!-- Black and White or Color Radios -->
+    <fieldset class="form-group">
+
+      <div class="form-check form-check-inline">
+        <input id="BlackAndWhiteRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomBlackAndWhite()" checked>
+        <label class="form-check-label" for="BlackAndWhiteRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
+          Black & White
+        </label>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
+        <label class="form-check-label" for="MappedColorRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored based on its position relative to the underlying image"></span>
+          Color
+        </label>
+      </div>
+
+    </fieldset>
+
+      <!-- Direction Select -->
+      <div class="form-inline mb-1">
+        <label for="DirectionDropdown">
+          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the direction for the particles to flow."></span>
+        </label>
+        <select id="DirectionDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomDirection($event)">
+          <option *ngFor="let direction of availableDirections" [selected]="direction == customRainParticleSettings.direction" [value]="direction">{{direction}}</option>
+        </select>
+      </div>
+
+      <!-- Global Composite Operations Option Select -->
+      <div class="form-inline mb-1">
+        <label for="CompositeOperationOptionsDropdown">
+          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select composite operation option."></span>
+        </label>
+        <select id="CompositeOperationOptionsDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomGlobalCompositeOperationOptions($event)">
+          <option *ngFor="let gcoOption of globalCompositeOperationOptions" [selected]="gcoOption == customRainParticleSettings.globalCompositeOperationOptions" [value]="gcoOption">{{gcoOption}}</option>
+        </select>
+      </div>
+
+      <!-- Particle Size Range -->
+      <div>
+        <label for="SizeRangeInput">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the size of each individual particle"></span>
+          Particle Size: {{customRainParticleSettings.sizeModifier}}
+        </label>
+        <input id="SizeRangeInput" type="range" class="form-control-range" min="1" max="100" step="0.5"
+          (change)="selectCustomSize(SizeRangeInput.value)" value="0" #SizeRangeInput>
+      </div>
+
+      <!-- Particle Speed Range -->
+      <div>
+        <label for="SpeedRangeInput">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the speed modifier for each particle"></span>
+          Particle Speed: {{customRainParticleSettings.velocityModifier}}
+        </label>
+        <input id="SpeedRangeInput" type="range" class="form-control-range" min="0" max="100" step="0.05"
+          (change)="selectCustomSpeed(SpeedRangeInput.value)" value="0" #SpeedRangeInput>
+      </div>
 
   </form>
 </div>
