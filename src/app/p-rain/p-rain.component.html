@@ -27,7 +27,7 @@
       <div>
         <label for="SizeRangeInput">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the opacity modifier."></span>
-          Opacity Modifier: <input class="form-control form-control-sm" size="4" maxlength="4" type="text" value="{{alphaModifier}}">
+          Opacity Modifier: {{alphaModifier}}
         </label>
         <div class="btn-group">
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="AlphaRangeInput.stepDown(); selectAlphaModifier(AlphaRangeInput.valueAsNumber)"><</button>
