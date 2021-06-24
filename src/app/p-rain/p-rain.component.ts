@@ -28,6 +28,8 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   private clearCanvasCB!: ElementRef<HTMLInputElement>;
   private clearCanvasFlag: boolean = false;
 
+  alphaModifier: number = 0.05;
+
   private animationId: number = 0;
 
   /**
@@ -87,6 +89,11 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     cancelAnimationFrame(this.animationId);
   }// ==============================
 
+  selectAlphaModifier(value: string) {
+    this.debug("Selected Alpha: ".concat(value));
+    this.alphaModifier = parseFloat(value);
+  }// ==============================
+
   /**
    * Sets the customRainParticleSettings to use white particles.
    * Alternate to selectCustomMappedColors.
@@ -96,9 +103,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.selectCustomRainParticleSettings();
   }// ==============================
 
-    /**
-     * Sets the direction which the particles will flow towards.
-     */
+  /**
+   * Sets the direction which the particles will flow towards.
+   */
   selectCustomDirection(event: Event): void {
     this.debug((<HTMLSelectElement>event.target).value);
     this.customRainParticleSettings.direction = (<HTMLSelectElement>event.target).value;
@@ -157,8 +164,11 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.clearCanvasFlag = this.clearCanvasCB.nativeElement.checked;
   }// ==============================
 
+  /**
+   * All the animation logic, from top level
+   */
   private animate(): void  {
-    this.context!.globalAlpha = 0.05;
+    this.context!.globalAlpha = this.alphaModifier;
 
     if(this.clearCanvasFlag) {
       this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
@@ -192,12 +202,19 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     }// =====
   }// ==============================
 
+  /**
+   * Creates and initializes all the particles with the default settings
+   */
   private initializeRainParticles(): void  {
     for(let i = 0; i < this.numberOfParticles; i++) {
       this.particlesArray.push(new RainParticle(this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.rainParticleSettings[this.selectedRainParticleSettings]));
     }// =====
   }// ==============================
 
+  /**
+   * Separated out so settings can be changed on the fly,
+   * note: new settings aren't visible until the particle is reset
+   */
   private setRainParticleSettings(): void {
     let tempSettingsObj = this.usePresetFlag ? this.rainParticleSettings[this.selectedRainParticleSettings] : this.customRainParticleSettings;
     for(let i = 0; i < this.numberOfParticles; i++) {
@@ -205,6 +222,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     }// =====
   }// ==============================
 
+  /**
+   * Initialize and setup canvas and context deminsions based on the image used
+   */
   private setupCanvas(): void {
 
   let imageScaler: number = 1;
@@ -249,6 +269,14 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     console.debug(this.mappedImage);
   }// ==============================
 
+  /**
+   * Sets up the load listener on the image to:
+   *    - initialize the canvas based on the image dimensions
+   *      - do this here to avoid access errors
+   *    - map the image data to an array
+   *    - initialize the rain particles
+   *    - start the animation
+   */
   private setupLoadListener(): void  {
     this.image.addEventListener('load', () => {
       this.setupCanvas();

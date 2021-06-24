@@ -23,6 +23,16 @@
         </label>
       </div>
 
+      <!-- Alpha Modifier Range -->
+      <div>
+        <label for="SizeRangeInput">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the opacity modifier."></span>
+          Opacity Modifier: {{alphaModifier}}
+        </label>
+        <input id="SizeRangeInput" type="range" class="form-control-range" min="0" max="1" step="0.05"
+          (change)="selectAlphaModifier(AlphaRangeInput.value)" value="0" #AlphaRangeInput>
+      </div>
+
     </div>
     <!-- Black and White or Color Radios -->
     <fieldset class="form-group">
