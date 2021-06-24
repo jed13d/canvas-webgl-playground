@@ -89,9 +89,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     cancelAnimationFrame(this.animationId);
   }// ==============================
 
-  selectAlphaModifier(value: string) {
-    this.debug("Selected Alpha: ".concat(value));
-    this.alphaModifier = parseFloat(value);
+  selectAlphaModifier(value: number) {
+    this.debug("Selected Alpha: "+ value);
+    this.alphaModifier = value;
   }// ==============================
 
   /**
@@ -134,15 +134,15 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.setRainParticleSettings();
   }// ==============================
 
-  selectCustomSize(value: string) {
-    this.debug("Selected Size: ".concat(value));
-    this.customRainParticleSettings.sizeModifier = parseFloat(value);
+  selectCustomSize(value: number) {
+    this.debug("Selected Size: "+ value);
+    this.customRainParticleSettings.sizeModifier = value;
     this.selectCustomRainParticleSettings();
   }// ==============================
 
-  selectCustomSpeed(value: string): void {
-    this.debug("Selected Speed: ".concat(value));
-    this.customRainParticleSettings.velocityModifier = parseFloat(value);
+  selectCustomSpeed(value: number): void {
+    this.debug("Selected Speed: "+ value);
+    this.customRainParticleSettings.velocityModifier = value;
     this.selectCustomRainParticleSettings();
   }// ==============================
 

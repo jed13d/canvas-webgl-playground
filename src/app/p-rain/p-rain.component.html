@@ -27,10 +27,14 @@
       <div>
         <label for="SizeRangeInput">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the opacity modifier."></span>
-          Opacity Modifier: {{alphaModifier}}
+          Opacity Modifier: <input class="form-control form-control-sm" size="4" maxlength="4" type="text" value="{{alphaModifier}}">
         </label>
-        <input id="SizeRangeInput" type="range" class="form-control-range" min="0" max="1" step="0.05"
-          (change)="selectAlphaModifier(AlphaRangeInput.value)" value="0" #AlphaRangeInput>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="AlphaRangeInput.stepDown(); selectAlphaModifier(AlphaRangeInput.valueAsNumber)"><</button>
+          <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="0" max="1" step="0.05" 
+            (change)="selectAlphaModifier(AlphaRangeInput.valueAsNumber)" value="0" #AlphaRangeInput>
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="AlphaRangeInput.stepUp(); selectAlphaModifier(AlphaRangeInput.valueAsNumber)">></button>
+        </div>
       </div>
 
     </div>
@@ -81,8 +85,12 @@
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the size of each individual particle"></span>
           Particle Size: {{customRainParticleSettings.sizeModifier}}
         </label>
-        <input id="SizeRangeInput" type="range" class="form-control-range" min="1" max="100" step="0.5"
-          (change)="selectCustomSize(SizeRangeInput.value)" value="0" #SizeRangeInput>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepDown(); selectCustomSize(SizeRangeInput.valueAsNumber)"><</button>
+          <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="1" max="100" step="0.5"
+            (change)="selectCustomSize(SizeRangeInput.valueAsNumber)" value="0" #SizeRangeInput>
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepUp(); selectCustomSize(SizeRangeInput.valueAsNumber)">></button>
+        </div>
       </div>
 
       <!-- Particle Speed Range -->
@@ -91,8 +99,12 @@
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the speed modifier for each particle"></span>
           Particle Speed: {{customRainParticleSettings.velocityModifier}}
         </label>
-        <input id="SpeedRangeInput" type="range" class="form-control-range" min="0" max="100" step="0.05"
-          (change)="selectCustomSpeed(SpeedRangeInput.value)" value="0" #SpeedRangeInput>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepDown(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)"><</button>
+          <input id="SpeedRangeInput" type="range" class="form-control-range col-10" min="0" max="100" step="0.05"
+            (change)="selectCustomSpeed(SpeedRangeInput.valueAsNumber)" value="0" #SpeedRangeInput>
+          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepUp(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)">></button>
+        </div>
       </div>
 
   </form>
