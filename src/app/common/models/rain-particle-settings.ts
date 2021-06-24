@@ -1,12 +1,12 @@
 export class RainParticleSettings {
-  color: number;
+  color: string;
   direction: string;
   globalCompositeOperationOptions: string;
   name: string;
   sizeModifier: number;
   velocityModifier: number;
 
-  constructor(color: number, direction: string, globalCompositeOperationOptions: string, name: string, sizeModifier: number, velocityModifier: number) {
+  constructor(color: string, direction: string, globalCompositeOperationOptions: string, name: string, sizeModifier: number, velocityModifier: number) {
     this.color = color;
     this.direction = direction;
     this.globalCompositeOperationOptions = globalCompositeOperationOptions;

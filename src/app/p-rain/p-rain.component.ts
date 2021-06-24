@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
-import { MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
+import { ColorObj, MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
 
 @Component({
   selector: 'app-p-rain',
@@ -41,40 +41,50 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
      "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue",
      "saturation", "color", "luminosity"
   ];
+  
+  availableDirections: string[] = [
+    "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
+  ];
+
   selectedRainParticleSettings: number = 0;
+
   rainParticleSettings: RainParticleSettings[] = [
     {   // 0 - b&w "brightness" "default"
-      color: 0,
-      direction: "down",
+      color: ColorObj.getWhiteRgb(),
+      direction: this.availableDirections[0],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "B&W Brightness",
-      sizeModifier:  1.75,
+      sizeModifier:  1.5,
       velocityModifier: 0.5,
     },
     {   // 1 - color rainy window effect
-      color: 1,
-      direction: "down",
+      color: ColorObj.getMappedImageString(),
+      direction: this.availableDirections[0],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "Rainy Window",
       sizeModifier:  5,
       velocityModifier: 0.5,
     }
   ];// =====
-  availableDirections: string[] = [
-    "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
-  ];
-  customRainParticleSettings: RainParticleSettings = {
-    color: this.selectedRainParticleSettings,
-    direction: "down",
-    globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-    name: "Custom Settings",
-    sizeModifier:  1.75,
-    velocityModifier: 0.5,
-  };
+
+  customColorObj: ColorObj = new ColorObj();
+  customRainParticleSettings: RainParticleSettings;
+
+  @ViewChild('BlueInput')
+  private blueInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('GreenInput')
+  private greenInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('RedInput')
+  private redInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private globalService: GlobalService,) {
       this.image.src = environment.imageSrc;
+      this.customRainParticleSettings = Object.assign({}, this.rainParticleSettings[0]);
+      this.customColorObj.setFromRgb(this.customRainParticleSettings.color);
+      this.customRainParticleSettings.name = "Custom Settings";
   }// ==============================
 
   ngAfterViewInit(): void {
@@ -98,8 +108,8 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Sets the customRainParticleSettings to use white particles.
    * Alternate to selectCustomMappedColors.
    */
-  selectCustomBlackAndWhite(): void {
-    this.customRainParticleSettings.color = 0;
+  selectCustomColor(): void {
+    this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
     this.selectCustomRainParticleSettings();
   }// ==============================
 
@@ -123,7 +133,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Alternate to selectCustomBlackAndWhite.
    */
   selectCustomMappedColors(): void {
-    this.customRainParticleSettings.color = 1;
+    this.customRainParticleSettings.color = ColorObj.getMappedImageString();
     this.selectCustomRainParticleSettings();
   }// ==============================
 
@@ -153,6 +163,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     }// =====
     this.selectedRainParticleSettings = parseInt((<HTMLSelectElement>event.target).value);
     this.setRainParticleSettings();
+  }// ==============================
+
+  toggleCustomColorInputs() {
   }// ==============================
 
   toggleUsePresetFlag(): void  {

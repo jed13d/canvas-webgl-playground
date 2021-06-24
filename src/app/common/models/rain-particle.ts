@@ -23,15 +23,11 @@ export class RainParticle {
 
     draw(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
       context.beginPath();
-      switch(this.rainParticleSettings.color) {
-        case 1:
-          context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
-          break;
-        case 0:
-        default:
-          context.fillStyle = 'white';
-          break;
-      }// =====
+      if(this.rainParticleSettings.color === "mappedColors") {
+        context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
+      } else {
+        context.fillStyle = this.rainParticleSettings.color;
+      }
       context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       context.fill();
     }// ==============================

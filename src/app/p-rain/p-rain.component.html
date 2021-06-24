@@ -38,24 +38,78 @@
       </div>
 
     </div>
-    <!-- Black and White or Color Radios -->
+
+    <!-- Color Custom or Mapped Radios -->
     <fieldset class="form-group">
 
-      <div class="form-check form-check-inline">
-        <input id="BlackAndWhiteRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomBlackAndWhite()" checked>
-        <label class="form-check-label" for="BlackAndWhiteRadio">
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
-          Black & White
-        </label>
-      </div>
-
-      <div class="form-check form-check-inline">
+      <div class="form-check">
         <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
         <label class="form-check-label" for="MappedColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored based on its position relative to the underlying image"></span>
-          Color
+          Image Mapped Color
         </label>
       </div>
+
+      <div class="form-check">
+        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(); toggleCustomColorInputs()" checked>
+        <label class="form-check-label" for="CustomColorRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
+          Custom Color
+        </label>
+      </div>
+
+        <table class="mb-10">
+          <tr>
+            <td>
+
+              <!-- Red Input -->
+              <div>  
+                <label class="col-form-label" for="RedInput">R:</label>
+                <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
+                  (change)="selectCustomColor()" value="{{customColorObj.red}}" #RedInput>
+              </div>
+        
+              <!-- Green Input -->
+              <div> 
+                <label class="col-form-label" for="GreenInput">G:</label>
+                <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
+                  (change)="selectCustomColor()" value="{{customColorObj.green}}" #GreenInput>
+              </div>
+        
+              <!-- Blue Input -->
+              <div> 
+                <label class="col-form-label" for="BlueInput">B:</label>
+                <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
+                  (change)="selectCustomColor()" value="{{customColorObj.blue}}" #BlueInput>
+              </div>
+
+            </td>
+            <td>
+
+              <div class="form-check">
+                <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
+                <label class="form-check-label" for="MappedColorRadio">
+                  Black
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
+                <label class="form-check-label" for="MappedColorRadio">
+                  Yellow
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
+                <label class="form-check-label" for="MappedColorRadio">
+                  White
+                </label>
+              </div>
+
+            </td>
+          </tr>
+        </table>
 
     </fieldset>
 
