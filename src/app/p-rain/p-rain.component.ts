@@ -108,7 +108,32 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Sets the customRainParticleSettings to use white particles.
    * Alternate to selectCustomMappedColors.
    */
-  selectCustomColor(): void {
+  selectCustomColor(preset: boolean, color: string | null = null): void {
+    if(preset && color !== null) {
+      switch(color) {
+        case "black":
+          this.blueInput.nativeElement.value = "0";
+          this.greenInput.nativeElement.value = "0";
+          this.redInput.nativeElement.value = "0";
+          break;
+        case "purple":
+          this.blueInput.nativeElement.value = "255";
+          this.greenInput.nativeElement.value = "0";
+          this.redInput.nativeElement.value = "255";
+          break;
+        case "white":
+        default:
+          this.blueInput.nativeElement.value = "255";
+          this.greenInput.nativeElement.value = "255";
+          this.redInput.nativeElement.value = "255";
+          break;
+        case "yellow":
+          this.blueInput.nativeElement.value = "0";
+          this.greenInput.nativeElement.value = "255";
+          this.redInput.nativeElement.value = "255";
+          break;
+      }// =====
+    }// =====
     this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
     this.selectCustomRainParticleSettings();
   }// ==============================
@@ -165,9 +190,6 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.setRainParticleSettings();
   }// ==============================
 
-  toggleCustomColorInputs() {
-  }// ==============================
-
   toggleUsePresetFlag(): void  {
     this.usePresetFlag = this.usePresetCB.nativeElement.checked;
     this.setRainParticleSettings();
@@ -186,7 +208,13 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     if(this.clearCanvasFlag) {
       this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     }
-    this.context!.fillStyle = 'rgb(0, 0, 0, 1)';
+    if(this.blueInput.nativeElement.value === "0"
+      && this.greenInput.nativeElement.value === "0"
+      && this.redInput.nativeElement.value === "0") {
+        this.context!.fillStyle = 'rgb(255, 255, 255, 1)';
+    } else {
+      this.context!.fillStyle = 'rgb(0, 0, 0, 1)';
+    }// =====
     this.context!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let alphaModifier = 0.05;
