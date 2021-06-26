@@ -31,8 +31,8 @@
         </label>
         <div class="btn-group">
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="AlphaRangeInput.stepDown(); selectAlphaModifier(AlphaRangeInput.valueAsNumber)"><</button>
-          <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="0" max="1" step="0.05" 
-            (change)="selectAlphaModifier(AlphaRangeInput.valueAsNumber)" value="0" #AlphaRangeInput>
+          <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="0" max="1" step="0.05"
+            (input)="selectAlphaModifier(AlphaRangeInput.valueAsNumber)" value="0" #AlphaRangeInput>
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="AlphaRangeInput.stepUp(); selectAlphaModifier(AlphaRangeInput.valueAsNumber)">></button>
         </div>
       </div>
@@ -63,21 +63,21 @@
             <td>
 
               <!-- Red Input -->
-              <div>  
+              <div>
                 <label class="col-form-label" for="RedInput">R:</label>
                 <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
                   (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
               </div>
-        
+
               <!-- Green Input -->
-              <div> 
+              <div>
                 <label class="col-form-label" for="GreenInput">G:</label>
                 <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
                   (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
               </div>
-        
+
               <!-- Blue Input -->
-              <div> 
+              <div>
                 <label class="col-form-label" for="BlueInput">B:</label>
                 <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
                   (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
@@ -149,7 +149,7 @@
         <div class="btn-group">
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepDown(); selectCustomSize(SizeRangeInput.valueAsNumber)"><</button>
           <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="1" max="100" step="0.5"
-            (change)="selectCustomSize(SizeRangeInput.valueAsNumber)" value="0" #SizeRangeInput>
+            (input)="selectCustomSize(SizeRangeInput.valueAsNumber)" value="0" #SizeRangeInput>
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepUp(); selectCustomSize(SizeRangeInput.valueAsNumber)">></button>
         </div>
       </div>
@@ -163,7 +163,7 @@
         <div class="btn-group">
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepDown(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)"><</button>
           <input id="SpeedRangeInput" type="range" class="form-control-range col-10" min="0" max="100" step="0.05"
-            (change)="selectCustomSpeed(SpeedRangeInput.valueAsNumber)" value="0" #SpeedRangeInput>
+            (input)="selectCustomSpeed(SpeedRangeInput.valueAsNumber)" value="0" #SpeedRangeInput>
           <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepUp(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)">></button>
         </div>
       </div>
