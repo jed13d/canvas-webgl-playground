@@ -16,7 +16,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
 
   private image: HTMLImageElement = new Image();
   private particlesArray: RainParticle[] = [];
-  private numberOfParticles = 15000;
+  private numberOfParticles = 8000;
   private desiredHeight: number = 500;
   private mappedImage: MappedPixel[][] = [];
 
@@ -28,7 +28,16 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   private clearCanvasCB!: ElementRef<HTMLInputElement>;
   private clearCanvasFlag: boolean = false;
 
-  alphaModifier: number = 0.05;
+  @ViewChild('SwirlCB')
+  private swirlCB!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('MappedColorRadio')
+  private mappedColorRadio!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('CustomColorRadio')
+  private customColorRadio!: ElementRef<HTMLInputElement>;
+
+  alphaModifier: number = 0.15;
 
   private animationId: number = 0;
 
@@ -41,20 +50,21 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
      "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue",
      "saturation", "color", "luminosity"
   ];
-  
+
   availableDirections: string[] = [
     "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
   ];
 
-  selectedRainParticleSettings: number = 0;
+  selectedRainParticleSettings: number = 2;
 
   rainParticleSettings: RainParticleSettings[] = [
     {   // 0 - b&w "brightness" "default"
       color: ColorObj.getWhiteRgb(),
       direction: this.availableDirections[0],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
-      name: "B&W Brightness",
+      name: "White Bright",
       sizeModifier:  1.5,
+      swirl: false,
       velocityModifier: 0.5,
     },
     {   // 1 - color rainy window effect
@@ -63,12 +73,22 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
       name: "Rainy Window",
       sizeModifier:  5,
+      swirl: false,
       velocityModifier: 0.5,
+    },
+    {   // 2 - rising fire
+      color: ColorObj.getMappedImageString(),
+      direction: this.availableDirections[7],
+      globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      name: "Rising Fire",
+      sizeModifier:  3,
+      swirl: true,
+      velocityModifier: 2.0,
     }
   ];// =====
 
   customColorObj: ColorObj = new ColorObj();
-  customRainParticleSettings: RainParticleSettings;
+  customRainParticleSettings!: RainParticleSettings;
 
   @ViewChild('BlueInput')
   private blueInput!: ElementRef<HTMLInputElement>;
@@ -82,14 +102,19 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   constructor(
     private globalService: GlobalService,) {
       this.image.src = environment.imageSrc;
-      this.customRainParticleSettings = Object.assign({}, this.rainParticleSettings[0]);
-      this.customColorObj.setFromRgb(this.customRainParticleSettings.color);
+      this.matchCustomSettingsToPreset();
       this.customRainParticleSettings.name = "Custom Settings";
   }// ==============================
 
   ngAfterViewInit(): void {
     this.usePresetCB.nativeElement.checked = this.usePresetFlag;
     this.clearCanvasCB.nativeElement.checked = this.clearCanvasFlag;
+    this.swirlCB.nativeElement.checked = this.customRainParticleSettings.swirl;
+    if(!(this.customRainParticleSettings.color === ColorObj.getMappedImageString())) {
+      this.customColorRadio.nativeElement.checked = true;
+    } else {
+      this.mappedColorRadio.nativeElement.checked = true;
+    }// =====
     this.setupLoadListener();
   }// ==============================
 
@@ -109,6 +134,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Alternate to selectCustomMappedColors.
    */
   selectCustomColor(preset: boolean, color: string | null = null): void {
+    this.customColorRadio.nativeElement.checked = true;
     if(preset && color !== null) {
       switch(color) {
         case "black":
@@ -158,6 +184,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Alternate to selectCustomBlackAndWhite.
    */
   selectCustomMappedColors(): void {
+    this.mappedColorRadio.nativeElement.checked = true;
     this.customRainParticleSettings.color = ColorObj.getMappedImageString();
     this.selectCustomRainParticleSettings();
   }// ==============================
@@ -190,13 +217,21 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.setRainParticleSettings();
   }// ==============================
 
-  toggleUsePresetFlag(): void  {
-    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
-    this.setRainParticleSettings();
+  toggleClearCanvasFlag(): void {
+    this.debug("toggleClearCanvasFlag: ", this.clearCanvasCB.nativeElement.checked);
+    this.clearCanvasFlag = this.clearCanvasCB.nativeElement.checked;
   }// ==============================
 
-  toggleClearCanvasFlag(): void {
-    this.clearCanvasFlag = this.clearCanvasCB.nativeElement.checked;
+  toggleSwirlFlag(): void {
+    this.debug("toggleSwirlFlag: ", this.swirlCB.nativeElement.checked);
+    this.customRainParticleSettings.swirl = this.swirlCB.nativeElement.checked;
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+  toggleUsePresetFlag(): void {
+    this.debug("toggleUsePresetFlag: ", this.usePresetCB.nativeElement.checked);
+    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
+    this.setRainParticleSettings();
   }// ==============================
 
   /**
@@ -249,6 +284,15 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   private initializeRainParticles(): void  {
     for(let i = 0; i < this.numberOfParticles; i++) {
       this.particlesArray.push(new RainParticle(this.canvas.nativeElement.width, this.canvas.nativeElement.height, this.rainParticleSettings[this.selectedRainParticleSettings]));
+    }// =====
+  }// ==============================
+
+  private matchCustomSettingsToPreset(): void {
+    this.customRainParticleSettings = Object.assign({}, this.rainParticleSettings[this.selectedRainParticleSettings]);
+    if(!(this.customRainParticleSettings.color === ColorObj.getMappedImageString())) {
+      this.customColorObj.setFromRgb(this.customRainParticleSettings.color);
+    } else {
+      this.customColorObj.setFromRgb(ColorObj.getWhiteRgb());
     }// =====
   }// ==============================
 

@@ -10,10 +10,12 @@ export class RainParticle {
     private canvasWidth: number;
     private canvasHeight: number;
     private speed: number;
+    private angle: number;
 
     private rainParticleSettings: RainParticleSettings;
 
     constructor(width: number, height: number, rainParticleSettings: RainParticleSettings) {
+      this.angle = Math.PI / 2;
       this.canvasWidth = width;
       this.canvasHeight = height;
       this.speed = 0;
@@ -113,50 +115,60 @@ export class RainParticle {
     update(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
       this.updateMovement();
       this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * Math.random();
+      this.size = this.speed * 2;
       context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
       this.draw(context, mappedImage);
     }// ==============================
 
     updateMovement() {
       let movement = (2.5 - this.speed) + this.velocity;
+      let sinOfAngle = 0;
+      let cosOfAngle = 0;
+      if(this.rainParticleSettings.swirl) {
+        this.angle += this.speed / 20;
+        sinOfAngle = Math.sin(this.angle) * 2;
+        cosOfAngle = Math.cos(this.angle) * 2;
+      } else {
+        sinOfAngle = cosOfAngle = 1;
+      }// =====
 
       switch (this.rainParticleSettings.direction) {
 
         case 'down-left':
-          this.x -= movement;
-          this.y += movement;
+          this.x -= movement * cosOfAngle;
+          this.y += movement * sinOfAngle;
           break;
 
         case 'down-right':
-          this.x += movement;
-          this.y += movement;
+          this.x += movement * cosOfAngle;
+          this.y += movement * sinOfAngle;
           break;
 
         case 'left':
-          this.x -= movement;
+          this.x -= movement * cosOfAngle;
           break;
 
         case 'right':
-          this.x += movement;
+          this.x += movement * cosOfAngle;
           break;
 
         case 'up':
-          this.y -= movement;
+          this.y -= movement * cosOfAngle;
           break;
 
         case 'up-left':
-          this.x -= movement;
-          this.y -= movement;
+          this.x -= movement * cosOfAngle;
+          this.y -= movement * sinOfAngle;
           break;
 
         case 'up-right':
-          this.x += movement;
-          this.y -= movement;
+          this.x += movement * cosOfAngle;
+          this.y -= movement * sinOfAngle;
           break;
 
         default:
         case 'down':
-          this.y += movement;
+          this.y += movement * cosOfAngle;
           break;
       }// =====
       if(this.y >= this.canvasHeight || this.x >= this.canvasWidth

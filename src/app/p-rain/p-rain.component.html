@@ -39,11 +39,20 @@
 
     </div>
 
+    <!-- Swirl Checkbox -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="SwirlCB" (change)="toggleSwirlFlag()" #SwirlCB>
+      <label class="form-check-label" for="SwirlCB">
+        <span class="bi bi-info-circle" placement="right" ngbTooltip="Select to add swirl particle effect."></span>
+        Swirl Effect
+      </label>
+    </div>
+
     <!-- Color Custom or Mapped Radios -->
     <fieldset class="form-group">
 
       <div class="form-check">
-        <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()">
+        <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()" #MappedColorRadio>
         <label class="form-check-label" for="MappedColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored based on its position relative to the underlying image"></span>
           Image Mapped Color
@@ -51,122 +60,122 @@
       </div>
 
       <div class="form-check">
-        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(false)" checked>
+        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(false)" #CustomColorRadio>
         <label class="form-check-label" for="CustomColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
           Custom Color
         </label>
       </div>
 
-        <table class="mb-10">
-          <tr>
-            <td>
+      <table class="mb-10">
+        <tr>
+          <td>
 
-              <!-- Red Input -->
-              <div>
-                <label class="col-form-label" for="RedInput">R:</label>
-                <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
-                  (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
-              </div>
+            <!-- Red Input -->
+            <div>
+              <label class="col-form-label" for="RedInput">R:</label>
+              <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
+                (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
+            </div>
 
-              <!-- Green Input -->
-              <div>
-                <label class="col-form-label" for="GreenInput">G:</label>
-                <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
-                  (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
-              </div>
+            <!-- Green Input -->
+            <div>
+              <label class="col-form-label" for="GreenInput">G:</label>
+              <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
+                (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
+            </div>
 
-              <!-- Blue Input -->
-              <div>
-                <label class="col-form-label" for="BlueInput">B:</label>
-                <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
-                  (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
-              </div>
+            <!-- Blue Input -->
+            <div>
+              <label class="col-form-label" for="BlueInput">B:</label>
+              <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
+                (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
+            </div>
 
-            </td>
-            <td class="pl-2">
+          </td>
+          <td class="pl-2">
 
-              <div class="form-check">
-                <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'black')">
-                <label class="form-check-label" for="MappedColorRadio">
-                  Black
-                </label>
-              </div>
+            <div class="form-check">
+              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'black')">
+              <label class="form-check-label" for="MappedColorRadio">
+                Black
+              </label>
+            </div>
 
-              <div class="form-check">
-                <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'purple')">
-                <label class="form-check-label" for="MappedColorRadio">
-                  Purple
-                </label>
-              </div>
+            <div class="form-check">
+              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'purple')">
+              <label class="form-check-label" for="MappedColorRadio">
+                Purple
+              </label>
+            </div>
 
-              <div class="form-check">
-                <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'white')">
-                <label class="form-check-label" for="MappedColorRadio">
-                  White
-                </label>
-              </div>
+            <div class="form-check">
+              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'white')">
+              <label class="form-check-label" for="MappedColorRadio">
+                White
+              </label>
+            </div>
 
-              <div class="form-check">
-                <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'yellow')">
-                <label class="form-check-label" for="MappedColorRadio">
-                  Yellow
-                </label>
-              </div>
+            <div class="form-check">
+              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'yellow')">
+              <label class="form-check-label" for="MappedColorRadio">
+                Yellow
+              </label>
+            </div>
 
-            </td>
-          </tr>
-        </table>
+          </td>
+        </tr>
+      </table>
 
     </fieldset>
 
-      <!-- Direction Select -->
-      <div class="form-inline mb-1">
-        <label for="DirectionDropdown">
-          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the direction for the particles to flow."></span>
-        </label>
-        <select id="DirectionDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomDirection($event)">
-          <option *ngFor="let direction of availableDirections" [selected]="direction == customRainParticleSettings.direction" [value]="direction">{{direction}}</option>
-        </select>
-      </div>
+    <!-- Direction Select -->
+    <div class="form-inline mb-1">
+      <label for="DirectionDropdown">
+        <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the direction for the particles to flow."></span>
+      </label>
+      <select id="DirectionDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomDirection($event)">
+        <option *ngFor="let direction of availableDirections" [selected]="direction == customRainParticleSettings.direction" [value]="direction">{{direction}}</option>
+      </select>
+    </div>
 
-      <!-- Global Composite Operations Option Select -->
-      <div class="form-inline mb-1">
-        <label for="CompositeOperationOptionsDropdown">
-          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select composite operation option."></span>
-        </label>
-        <select id="CompositeOperationOptionsDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomGlobalCompositeOperationOptions($event)">
-          <option *ngFor="let gcoOption of globalCompositeOperationOptions" [selected]="gcoOption == customRainParticleSettings.globalCompositeOperationOptions" [value]="gcoOption">{{gcoOption}}</option>
-        </select>
-      </div>
+    <!-- Global Composite Operations Option Select -->
+    <div class="form-inline mb-1">
+      <label for="CompositeOperationOptionsDropdown">
+        <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select composite operation option."></span>
+      </label>
+      <select id="CompositeOperationOptionsDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomGlobalCompositeOperationOptions($event)">
+        <option *ngFor="let gcoOption of globalCompositeOperationOptions" [selected]="gcoOption == customRainParticleSettings.globalCompositeOperationOptions" [value]="gcoOption">{{gcoOption}}</option>
+      </select>
+    </div>
 
-      <!-- Particle Size Range -->
-      <div>
-        <label for="SizeRangeInput">
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the size of each individual particle"></span>
-          Particle Size: {{customRainParticleSettings.sizeModifier}}
-        </label>
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepDown(); selectCustomSize(SizeRangeInput.valueAsNumber)"><</button>
-          <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="1" max="100" step="0.5"
-            (input)="selectCustomSize(SizeRangeInput.valueAsNumber)" value="0" #SizeRangeInput>
-          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepUp(); selectCustomSize(SizeRangeInput.valueAsNumber)">></button>
-        </div>
+    <!-- Particle Size Range -->
+    <div>
+      <label for="SizeRangeInput">
+        <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the size of each individual particle"></span>
+        Particle Size: {{customRainParticleSettings.sizeModifier}}
+      </label>
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepDown(); selectCustomSize(SizeRangeInput.valueAsNumber)"><</button>
+        <input id="SizeRangeInput" type="range" class="form-control-range col-10" min="1" max="100" step="0.5"
+          (input)="selectCustomSize(SizeRangeInput.valueAsNumber)" value="0" #SizeRangeInput>
+        <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SizeRangeInput.stepUp(); selectCustomSize(SizeRangeInput.valueAsNumber)">></button>
       </div>
+    </div>
 
-      <!-- Particle Speed Range -->
-      <div>
-        <label for="SpeedRangeInput">
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the speed modifier for each particle"></span>
-          Particle Speed: {{customRainParticleSettings.velocityModifier}}
-        </label>
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepDown(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)"><</button>
-          <input id="SpeedRangeInput" type="range" class="form-control-range col-10" min="0" max="100" step="0.05"
-            (input)="selectCustomSpeed(SpeedRangeInput.valueAsNumber)" value="0" #SpeedRangeInput>
-          <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepUp(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)">></button>
-        </div>
+    <!-- Particle Speed Range -->
+    <div>
+      <label for="SpeedRangeInput">
+        <span class="bi bi-info-circle" placement="right" ngbTooltip="Choose the speed modifier for each particle"></span>
+        Particle Speed: {{customRainParticleSettings.velocityModifier}}
+      </label>
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepDown(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)"><</button>
+        <input id="SpeedRangeInput" type="range" class="form-control-range col-10" min="0" max="100" step="0.05"
+          (input)="selectCustomSpeed(SpeedRangeInput.valueAsNumber)" value="0" #SpeedRangeInput>
+        <button type="button" class="btn btn-secondary btn-sm col-1" (click)="SpeedRangeInput.stepUp(); selectCustomSpeed(SpeedRangeInput.valueAsNumber)">></button>
       </div>
+    </div>
 
   </form>
 </div>
