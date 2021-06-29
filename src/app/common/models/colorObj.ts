@@ -13,10 +13,6 @@ export class ColorObj {
     return "rgb(0, 0, 0)";
   }// ==============================
 
-  static getMappedImageString(): string {
-    return "mappedColors";
-  }// ==============================
-
   static getRgb(blue: string = "255", green: string = "255", red: string = "255"): string {
     return "rgb("+ red +", "+ green +", "+ blue +")";
   }// ==============================

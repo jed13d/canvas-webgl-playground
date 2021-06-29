@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
 import { ColorObj, MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
@@ -51,9 +52,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
      "saturation", "color", "luminosity"
   ];
 
-  availableDirections: string[] = [
-    "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
-  ];
+  // imported variables
+  availableDirections: string[] = RainParticle.availableDirections;
+  availableColorSettings: string[] = RainParticle.availableColorSettings;
 
   selectedRainParticleSettings: number = 2;
 
@@ -62,24 +63,27 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
       color: ColorObj.getWhiteRgb(),
       direction: this.availableDirections[0],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      gradient: null,
       name: "White Bright",
       sizeModifier:  1.5,
       swirl: false,
       velocityModifier: 0.5,
     },
     {   // 1 - color rainy window effect
-      color: ColorObj.getMappedImageString(),
+      color: this.availableColorSettings[1],
       direction: this.availableDirections[0],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      gradient: null,
       name: "Rainy Window",
       sizeModifier:  5,
       swirl: false,
       velocityModifier: 0.5,
     },
     {   // 2 - rising fire
-      color: ColorObj.getMappedImageString(),
+      color: this.availableColorSettings[1],
       direction: this.availableDirections[7],
       globalCompositeOperationOptions: this.globalCompositeOperationOptions[0],
+      gradient: null,
       name: "Rising Fire",
       sizeModifier:  3,
       swirl: true,
@@ -110,11 +114,16 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.usePresetCB.nativeElement.checked = this.usePresetFlag;
     this.clearCanvasCB.nativeElement.checked = this.clearCanvasFlag;
     this.swirlCB.nativeElement.checked = this.customRainParticleSettings.swirl;
-    if(!(this.customRainParticleSettings.color === ColorObj.getMappedImageString())) {
-      this.customColorRadio.nativeElement.checked = true;
-    } else {
-      this.mappedColorRadio.nativeElement.checked = true;
-    }// =====
+    switch(this.customRainParticleSettings.color) {
+      case this.availableColorSettings[0]:
+        break;
+      case this.availableColorSettings[1]:
+        this.mappedColorRadio.nativeElement.checked = true;
+        break;
+      default:
+        this.customColorRadio.nativeElement.checked = true;
+        break;
+    }
     this.setupLoadListener();
   }// ==============================
 
@@ -185,7 +194,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    */
   selectCustomMappedColors(): void {
     this.mappedColorRadio.nativeElement.checked = true;
-    this.customRainParticleSettings.color = ColorObj.getMappedImageString();
+    this.customRainParticleSettings.color = this.availableColorSettings[1];
     this.selectCustomRainParticleSettings();
   }// ==============================
 
@@ -289,11 +298,10 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
 
   private matchCustomSettingsToPreset(): void {
     this.customRainParticleSettings = Object.assign({}, this.rainParticleSettings[this.selectedRainParticleSettings]);
-    if(!(this.customRainParticleSettings.color === ColorObj.getMappedImageString())) {
-      this.customColorObj.setFromRgb(this.customRainParticleSettings.color);
-    } else {
-      this.customColorObj.setFromRgb(ColorObj.getWhiteRgb());
-    }// =====
+    // if((typeof this.customRainParticleSettings.color) === ParticleColorSetting) {
+    //   this.customColorObj.setFromRgb(this.customRainParticleSettings.color);
+    // }// =====
+    console.log(typeof this.customRainParticleSettings.color);
   }// ==============================
 
   /**

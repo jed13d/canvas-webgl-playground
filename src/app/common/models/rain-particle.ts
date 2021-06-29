@@ -14,6 +14,14 @@ export class RainParticle {
 
     private rainParticleSettings: RainParticleSettings;
 
+    static availableDirections: string[] = [
+      "down", "down-left", "down-right", "left", "right", "up", "up-left", "up-right"
+    ];
+
+    static availableColorSettings: string[] = [
+      "gradient", "image-mapping"
+    ];
+
     constructor(width: number, height: number, rainParticleSettings: RainParticleSettings) {
       this.angle = Math.PI / 2;
       this.canvasWidth = width;
@@ -25,10 +33,18 @@ export class RainParticle {
 
     draw(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
       context.beginPath();
-      if(this.rainParticleSettings.color === "mappedColors") {
-        context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
-      } else {
-        context.fillStyle = this.rainParticleSettings.color;
+      switch(this.rainParticleSettings.color) {
+        case RainParticle.availableColorSettings[0]:
+          if(this.rainParticleSettings.gradient !== null) {
+            context.fillStyle = this.rainParticleSettings.gradient;
+          }
+          break;
+        case RainParticle.availableColorSettings[1]:
+          context.fillStyle = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getColor();
+          break;
+        default:
+          context.fillStyle = this.rainParticleSettings.color;
+          break;
       }
       context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       context.fill();
@@ -44,7 +60,7 @@ export class RainParticle {
 
       switch (this.rainParticleSettings.direction) {
 
-        case 'down-left':
+        case RainParticle.availableDirections[1]:
           if(Math.random() >= 0.5) {
             this.x = this.canvasWidth - 1;
             this.y = Math.random() * this.canvasHeight;
@@ -54,7 +70,7 @@ export class RainParticle {
           }
           break;
 
-        case 'down-right':
+        case RainParticle.availableDirections[2]:
           if(Math.random() >= 0.5) {
             this.x = 0;
             this.y = Math.random() * this.canvasHeight;
@@ -64,22 +80,22 @@ export class RainParticle {
           }
           break;
 
-        case 'left':
+        case RainParticle.availableDirections[3]:
           this.x = this.canvasWidth - 1;
           this.y = Math.random() * this.canvasHeight;
           break;
 
-        case 'right':
+        case RainParticle.availableDirections[4]:
           this.x = 0;
           this.y = Math.random() * this.canvasHeight;
           break;
 
-        case 'up':
+        case RainParticle.availableDirections[5]:
           this.x = Math.random() * this.canvasWidth;
           this.y = this.canvasHeight - 1;
           break;
 
-        case 'up-left':
+        case RainParticle.availableDirections[6]:
           if(Math.random() >= 0.5) {
             this.x = this.canvasWidth - 1;
             this.y = Math.random() * this.canvasHeight;
@@ -89,7 +105,7 @@ export class RainParticle {
           }
           break;
 
-        case 'up-right':
+        case RainParticle.availableDirections[7]:
         this.x = Math.random() * this.canvasWidth;
           if(Math.random() >= 0.5) {
             this.x = 0;
@@ -100,8 +116,8 @@ export class RainParticle {
           }
           break;
 
+        case RainParticle.availableDirections[8]:
         default:
-        case 'down':
           this.x = Math.random() * this.canvasWidth;
           this.y = 0;
           break;
@@ -115,7 +131,6 @@ export class RainParticle {
     update(context: CanvasRenderingContext2D, mappedImage: MappedPixel[][]) {
       this.updateMovement();
       this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)].getBrightness() * Math.random();
-      this.size = this.speed * 2;
       context.globalCompositeOperation = this.rainParticleSettings.globalCompositeOperationOptions;
       this.draw(context, mappedImage);
     }// ==============================
@@ -134,40 +149,40 @@ export class RainParticle {
 
       switch (this.rainParticleSettings.direction) {
 
-        case 'down-left':
+        case RainParticle.availableDirections[1]:
           this.x -= movement * cosOfAngle;
           this.y += movement * sinOfAngle;
           break;
 
-        case 'down-right':
+        case RainParticle.availableDirections[2]:
           this.x += movement * cosOfAngle;
           this.y += movement * sinOfAngle;
           break;
 
-        case 'left':
+        case RainParticle.availableDirections[3]:
           this.x -= movement * cosOfAngle;
           break;
 
-        case 'right':
+        case RainParticle.availableDirections[4]:
           this.x += movement * cosOfAngle;
           break;
 
-        case 'up':
+        case RainParticle.availableDirections[5]:
           this.y -= movement * cosOfAngle;
           break;
 
-        case 'up-left':
+        case RainParticle.availableDirections[6]:
           this.x -= movement * cosOfAngle;
           this.y -= movement * sinOfAngle;
           break;
 
-        case 'up-right':
+        case RainParticle.availableDirections[7]:
           this.x += movement * cosOfAngle;
           this.y -= movement * sinOfAngle;
           break;
 
+        case RainParticle.availableDirections[8]:
         default:
-        case 'down':
           this.y += movement * cosOfAngle;
           break;
       }// =====
