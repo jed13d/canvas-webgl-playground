@@ -52,7 +52,7 @@
     <fieldset class="form-group">
 
       <div class="form-check">
-        <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()" #MappedColorRadio>
+        <input id="MappedColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomMappedColors()" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#BlankPanel" #MappedColorRadio>
         <label class="form-check-label" for="MappedColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored based on its position relative to the underlying image"></span>
           Image Mapped Color
@@ -60,72 +60,80 @@
       </div>
 
       <div class="form-check">
-        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(false)" #CustomColorRadio>
+        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(false)" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#RGBPanel" #CustomColorRadio>
         <label class="form-check-label" for="CustomColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
           Custom Color
         </label>
       </div>
 
-      <table class="mb-10">
-        <tr>
-          <td>
+      <div class="accordion" id="ColorAccordian">
 
-            <!-- Red Input -->
-            <div>
-              <label class="col-form-label" for="RedInput">R:</label>
-              <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
-                (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
-            </div>
+        <div id="BlankPanel" class="card collapse bg-info text-white" data-parent="#ColorAccordian">
+        </div>
+        <div id="RGBPanel"  class="card collapse bg-info text-white" data-parent="#ColorAccordian">
+          <table class="mb-10">
+            <tr>
+              <td>
 
-            <!-- Green Input -->
-            <div>
-              <label class="col-form-label" for="GreenInput">G:</label>
-              <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
-                (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
-            </div>
+                <!-- Red Input -->
+                <div>
+                  <label class="col-form-label" for="RedInput">R:</label>
+                  <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
+                    (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
+                </div>
 
-            <!-- Blue Input -->
-            <div>
-              <label class="col-form-label" for="BlueInput">B:</label>
-              <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
-                (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
-            </div>
+                <!-- Green Input -->
+                <div>
+                  <label class="col-form-label" for="GreenInput">G:</label>
+                  <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
+                    (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
+                </div>
 
-          </td>
-          <td class="pl-2">
+                <!-- Blue Input -->
+                <div>
+                  <label class="col-form-label" for="BlueInput">B:</label>
+                  <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
+                    (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
+                </div>
 
-            <div class="form-check">
-              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'black')">
-              <label class="form-check-label" for="MappedColorRadio">
-                Black
-              </label>
-            </div>
+              </td>
+              <td class="pl-2">
 
-            <div class="form-check">
-              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'purple')">
-              <label class="form-check-label" for="MappedColorRadio">
-                Purple
-              </label>
-            </div>
+                <div class="form-check">
+                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'black')">
+                  <label class="form-check-label" for="MappedColorRadio">
+                    Black
+                  </label>
+                </div>
 
-            <div class="form-check">
-              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'white')">
-              <label class="form-check-label" for="MappedColorRadio">
-                White
-              </label>
-            </div>
+                <div class="form-check">
+                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'purple')">
+                  <label class="form-check-label" for="MappedColorRadio">
+                    Purple
+                  </label>
+                </div>
 
-            <div class="form-check">
-              <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'yellow')">
-              <label class="form-check-label" for="MappedColorRadio">
-                Yellow
-              </label>
-            </div>
+                <div class="form-check">
+                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'white')">
+                  <label class="form-check-label" for="MappedColorRadio">
+                    White
+                  </label>
+                </div>
 
-          </td>
-        </tr>
-      </table>
+                <div class="form-check">
+                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'yellow')">
+                  <label class="form-check-label" for="MappedColorRadio">
+                    Yellow
+                  </label>
+                </div>
+
+              </td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
 
     </fieldset>
 

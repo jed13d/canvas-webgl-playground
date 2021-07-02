@@ -47,9 +47,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Also all custom settings and variables for UI.
    */
   globalCompositeOperationOptions: string[] = [
-     "source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy",
-     "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue",
-     "saturation", "color", "luminosity"
+     "source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out",
+     "destination-atop", "lighter", "copy", "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge",
+     "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
   ];
 
   // imported variables
