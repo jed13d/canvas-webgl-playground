@@ -1,4 +1,5 @@
-export * from "./colorObj";
+export * from "./color-obj";
+export * from "./css-color-obj";
 export * from './mapped-pixel';
 export * from './mouse-obj';
 export * from './rain-particle';

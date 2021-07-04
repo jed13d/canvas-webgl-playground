@@ -46,8 +46,16 @@ export class ColorObj {
   // "rgb(255, 255, 255)"
   //  012345678901234567
   setFromRgb(rgb: string): void {
-    this.blue = parseInt(rgb.substr(4, 3));
-    this.green = parseInt(rgb.substr(9, 3));
-    this.red = parseInt(rgb.substr(14, 3));
+    let commaOneIdx = rgb.indexOf(',');
+    let redIdx = 4;
+    this.red = parseInt(rgb.substr(redIdx, (commaOneIdx - redIdx)));
+
+    let commaTwoIdx = rgb.indexOf(',', (commaOneIdx + 1));
+    let greenIdx = commaOneIdx + 2;
+    this.green = parseInt(rgb.substr(greenIdx, (commaTwoIdx - greenIdx)));
+
+    let blueIdx = commaTwoIdx + 2;
+    let closeParens = rgb.indexOf(')');
+    this.blue = parseInt(rgb.substr(blueIdx, (closeParens - blueIdx)));
   }// ==============================
 }// ==============================

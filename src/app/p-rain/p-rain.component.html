@@ -100,32 +100,11 @@
               </td>
               <td class="pl-2">
 
-                <div class="form-check">
-                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'black')">
-                  <label class="form-check-label" for="MappedColorRadio">
-                    Black
-                  </label>
-                </div>
-
-                <div class="form-check">
-                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'purple')">
-                  <label class="form-check-label" for="MappedColorRadio">
-                    Purple
-                  </label>
-                </div>
-
-                <div class="form-check">
-                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'white')">
-                  <label class="form-check-label" for="MappedColorRadio">
-                    White
-                  </label>
-                </div>
-
-                <div class="form-check">
-                  <input id="MappedColorRadio" class="form-check-input" name="ColorPresetRadioGroup" type="radio" (change)="selectCustomColor(true, 'yellow')">
-                  <label class="form-check-label" for="MappedColorRadio">
-                    Yellow
-                  </label>
+                <!-- Dropdown containing most-all css color strings -->
+                <div>
+                  <select id="ColorsDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomColor(true, $event)">
+                    <option *ngFor="let cssColor of availableCssColors; let i = index" [value]="cssColor.name">{{cssColor.name}}</option>
+                  </select>
                 </div>
 
               </td>

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
-import { ColorObj, MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
+import { ColorObj, CssColorObj, MappedPixel, RainParticle, RainParticleSettings } from 'src/app/common/models';
 
 @Component({
   selector: 'app-p-rain',
@@ -51,6 +51,8 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
      "destination-atop", "lighter", "copy", "xor", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge",
      "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
   ];
+
+  availableCssColors: CssColorObj[] = this.globalService.availableCssColors;
 
   // imported variables
   availableDirections: string[] = RainParticle.availableDirections;
@@ -142,34 +144,28 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
    * Sets the customRainParticleSettings to use white particles.
    * Alternate to selectCustomMappedColors.
    */
-  selectCustomColor(preset: boolean, color: string | null = null): void {
+  selectCustomColor(preset: boolean, event: Event | null = null): void {
     this.customColorRadio.nativeElement.checked = true;
-    if(preset && color !== null) {
-      switch(color) {
-        case "black":
-          this.blueInput.nativeElement.value = "0";
-          this.greenInput.nativeElement.value = "0";
-          this.redInput.nativeElement.value = "0";
-          break;
-        case "purple":
-          this.blueInput.nativeElement.value = "255";
-          this.greenInput.nativeElement.value = "0";
-          this.redInput.nativeElement.value = "255";
-          break;
-        case "white":
-        default:
-          this.blueInput.nativeElement.value = "255";
-          this.greenInput.nativeElement.value = "255";
-          this.redInput.nativeElement.value = "255";
-          break;
-        case "yellow":
-          this.blueInput.nativeElement.value = "0";
-          this.greenInput.nativeElement.value = "255";
-          this.redInput.nativeElement.value = "255";
-          break;
-      }// =====
+    if(preset && event !== null) {
+      this.debug((<HTMLSelectElement>event.target).value);
+      let color = this.availableCssColors.find(cObj => cObj.name === (<HTMLSelectElement>event.target).value);
+
+      let commaOneIdx = color!.rgb.indexOf(',');
+      let redIdx = 4;
+      this.redInput.nativeElement.value = color!.rgb.substr(redIdx, (commaOneIdx - redIdx));
+
+      let commaTwoIdx = color!.rgb.indexOf(',', (commaOneIdx + 1));
+      let greenIdx = commaOneIdx + 2;
+      this.greenInput.nativeElement.value = color!.rgb.substr(greenIdx, (commaTwoIdx - greenIdx));
+
+      let blueIdx = commaTwoIdx + 2;
+      let closeParens = color!.rgb.indexOf(')');
+      this.blueInput.nativeElement.value = color!.rgb.substr(blueIdx, (closeParens - blueIdx));
+
+      this.customRainParticleSettings.color = color!.rgb;
+    } else {
+      this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
     }// =====
-    this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
     this.selectCustomRainParticleSettings();
   }// ==============================
 
