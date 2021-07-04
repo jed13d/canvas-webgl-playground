@@ -60,7 +60,7 @@
       </div>
 
       <div class="form-check">
-        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor(false)" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#RGBPanel" #CustomColorRadio>
+        <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor()" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#RGBPanel" #CustomColorRadio>
         <label class="form-check-label" for="CustomColorRadio">
           <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
           Custom Color
@@ -74,27 +74,27 @@
         <div id="RGBPanel"  class="card collapse bg-info text-white" data-parent="#ColorAccordian">
           <table class="mb-10">
             <tr>
-              <td>
+              <td class="w-50">
 
                 <!-- Red Input -->
                 <div>
                   <label class="col-form-label" for="RedInput">R:</label>
                   <input id="RedInput" type="Number" class="form-control-sm" min="0" max="255"
-                    (change)="selectCustomColor(false)" value="{{customColorObj.red}}" #RedInput>
+                    (change)="selectCustomColor()" value="{{customColorObj.red}}" #RedInput>
                 </div>
 
                 <!-- Green Input -->
                 <div>
                   <label class="col-form-label" for="GreenInput">G:</label>
                   <input id="GreenInput" type="Number" class="form-control-sm" min="0" max="255"
-                    (change)="selectCustomColor(false)" value="{{customColorObj.green}}" #GreenInput>
+                    (change)="selectCustomColor()" value="{{customColorObj.green}}" #GreenInput>
                 </div>
 
                 <!-- Blue Input -->
                 <div>
                   <label class="col-form-label" for="BlueInput">B:</label>
                   <input id="BlueInput" type="Number" class="form-control-sm" min="0" max="255"
-                    (change)="selectCustomColor(false)" value="{{customColorObj.blue}}" #BlueInput>
+                    (change)="selectCustomColor()" value="{{customColorObj.blue}}" #BlueInput>
                 </div>
 
               </td>
@@ -102,8 +102,15 @@
 
                 <!-- Dropdown containing most-all css color strings -->
                 <div>
-                  <select id="ColorsDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomColor(true, $event)">
-                    <option *ngFor="let cssColor of availableCssColors; let i = index" [value]="cssColor.name">{{cssColor.name}}</option>
+                  <select id="CssColorsDropdown" class="custom-select custom-select-sm" (change)="selectCustomCssColor($event)">
+                    <option *ngFor="let cssColor of availableCssColors" [value]="cssColor.name">{{cssColor.name}}</option>
+                  </select>
+                </div><br />
+
+                <!-- Dropdown containing many crayola css color strings -->
+                <div>
+                  <select id="CrayolaColorsDropdown" class="custom-select custom-select-sm" (change)="selectCustomCrayolaColor($event)">
+                    <option *ngFor="let crayolaColor of availableCrayolaColors" [value]="crayolaColor.name">{{crayolaColor.name}}</option>
                   </select>
                 </div>
 

@@ -52,7 +52,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
      "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"
   ];
 
+  availableCrayolaColors: CssColorObj[] = this.globalService.availableCrayolaColors;
   availableCssColors: CssColorObj[] = this.globalService.availableCssColors;
+  selectedCssColorObject: CssColorObj = this.availableCssColors[0];
 
   // imported variables
   availableDirections: string[] = RainParticle.availableDirections;
@@ -140,33 +142,64 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.alphaModifier = value;
   }// ==============================
 
+  selectCustomColor(): void {
+    this.customColorRadio.nativeElement.checked = true;
+
+    this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
+
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
   /**
    * Sets the customRainParticleSettings to use white particles.
    * Alternate to selectCustomMappedColors.
    */
-  selectCustomColor(preset: boolean, event: Event | null = null): void {
+  selectCustomCssColor(event: Event): void {
     this.customColorRadio.nativeElement.checked = true;
-    if(preset && event !== null) {
-      this.debug((<HTMLSelectElement>event.target).value);
-      let color = this.availableCssColors.find(cObj => cObj.name === (<HTMLSelectElement>event.target).value);
+    this.debug((<HTMLSelectElement>event.target).value);
 
-      let commaOneIdx = color!.rgb.indexOf(',');
-      let redIdx = 4;
-      this.redInput.nativeElement.value = color!.rgb.substr(redIdx, (commaOneIdx - redIdx));
+    let colorObj = this.availableCssColors.find(cObj => cObj.name === (<HTMLSelectElement>event.target).value);
+    if(colorObj !== undefined) {
+      this.selectedCssColorObject = colorObj;
 
-      let commaTwoIdx = color!.rgb.indexOf(',', (commaOneIdx + 1));
-      let greenIdx = commaOneIdx + 2;
-      this.greenInput.nativeElement.value = color!.rgb.substr(greenIdx, (commaTwoIdx - greenIdx));
+      this.setRgbInputFromselectedCssColorObject();
+      this.customRainParticleSettings.color = this.selectedCssColorObject.rgb;
 
-      let blueIdx = commaTwoIdx + 2;
-      let closeParens = color!.rgb.indexOf(')');
-      this.blueInput.nativeElement.value = color!.rgb.substr(blueIdx, (closeParens - blueIdx));
-
-      this.customRainParticleSettings.color = color!.rgb;
-    } else {
-      this.customRainParticleSettings.color = ColorObj.getRgb(this.blueInput.nativeElement.value, this.greenInput.nativeElement.value,this.redInput.nativeElement.value);
+      this.selectCustomRainParticleSettings();
     }// =====
-    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+  /**
+   * Sets the customRainParticleSettings to use white particles.
+   * Alternate to selectCustomMappedColors.
+   */
+  selectCustomCrayolaColor(event: Event): void {
+    this.customColorRadio.nativeElement.checked = true;
+    this.debug((<HTMLSelectElement>event.target).value);
+
+    let colorObj = this.availableCrayolaColors.find(cObj => cObj.name === (<HTMLSelectElement>event.target).value);
+    if(colorObj !== undefined) {
+      this.selectedCssColorObject = colorObj;
+
+      this.setRgbInputFromselectedCssColorObject();
+      this.customRainParticleSettings.color = this.selectedCssColorObject.rgb;
+
+      this.selectCustomRainParticleSettings();
+    }// =====
+  }// ==============================
+
+  private setRgbInputFromselectedCssColorObject(): void {
+    let commaOneIdx = this.selectedCssColorObject.rgb.indexOf(',');
+    let redIdx = 4;
+    this.redInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(redIdx, (commaOneIdx - redIdx));
+
+    let commaTwoIdx = this.selectedCssColorObject.rgb.indexOf(',', (commaOneIdx + 1));
+    let greenIdx = commaOneIdx + 2;
+    this.greenInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(greenIdx, (commaTwoIdx - greenIdx));
+
+    let blueIdx = commaTwoIdx + 2;
+    let closeParens = this.selectedCssColorObject.rgb.indexOf(')');
+    this.blueInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(blueIdx, (closeParens - blueIdx));
   }// ==============================
 
   /**
