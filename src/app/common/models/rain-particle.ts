@@ -36,6 +36,7 @@ export class RainParticle {
       switch(this.rainParticleSettings.color) {
         case RainParticle.availableColorSettings[0]:
           if(this.rainParticleSettings.gradient !== null) {
+            // console.log("RainParticle Gradient");
             context.fillStyle = this.rainParticleSettings.gradient;
           }
           break;

@@ -62,8 +62,16 @@
       <div class="form-check">
         <input id="CustomColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomColor()" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#RGBPanel" #CustomColorRadio>
         <label class="form-check-label" for="CustomColorRadio">
-          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for each particle to be colored white."></span>
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option to customize the color of the particles"></span>
           Custom Color
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input id="GradientColorRadio" class="form-check-input" name="ColorRadioGroup" type="radio" (change)="selectCustomGradientColor()" data-toggle="collapse" data-parent="#ColorAccordian" data-target="#GradientPanel" #GradientColorRadio>
+        <label class="form-check-label" for="CustomColorRadio">
+          <span class="bi bi-info-circle" placement="right" ngbTooltip="Select this option for the particles to follow a gradient color scheme."></span>
+          Gradient Color
         </label>
       </div>
 
@@ -117,6 +125,9 @@
               </td>
             </tr>
           </table>
+        </div>
+        <div id="GradientPanel" class="card collapse bg-info text-white" data-parent="#ColorAccordian">
+
         </div>
 
       </div>

@@ -38,6 +38,9 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   @ViewChild('CustomColorRadio')
   private customColorRadio!: ElementRef<HTMLInputElement>;
 
+  @ViewChild('GradientColorRadio')
+  private gradientColorRadio!: ElementRef<HTMLInputElement>;
+
   alphaModifier: number = 0.15;
 
   private animationId: number = 0;
@@ -188,26 +191,25 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     }// =====
   }// ==============================
 
-  private setRgbInputFromselectedCssColorObject(): void {
-    let commaOneIdx = this.selectedCssColorObject.rgb.indexOf(',');
-    let redIdx = 4;
-    this.redInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(redIdx, (commaOneIdx - redIdx));
-
-    let commaTwoIdx = this.selectedCssColorObject.rgb.indexOf(',', (commaOneIdx + 1));
-    let greenIdx = commaOneIdx + 2;
-    this.greenInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(greenIdx, (commaTwoIdx - greenIdx));
-
-    let blueIdx = commaTwoIdx + 2;
-    let closeParens = this.selectedCssColorObject.rgb.indexOf(')');
-    this.blueInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(blueIdx, (closeParens - blueIdx));
-  }// ==============================
-
   /**
    * Sets the direction which the particles will flow towards.
    */
   selectCustomDirection(event: Event): void {
     this.debug((<HTMLSelectElement>event.target).value);
     this.customRainParticleSettings.direction = (<HTMLSelectElement>event.target).value;
+    this.selectCustomRainParticleSettings();
+  }// ==============================
+
+  selectCustomGradientColor(): void {
+    this.debug("selectCustomGradientColor");
+    this.gradientColorRadio.nativeElement.checked = true;
+    this.customRainParticleSettings.color = RainParticle.availableColorSettings[0];
+
+    this.customRainParticleSettings.gradient = this.context!.createLinearGradient(0, 0, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
+    this.customRainParticleSettings.gradient.addColorStop(0.3, "red");
+    this.customRainParticleSettings.gradient.addColorStop(0.6, "yellow");
+    this.customRainParticleSettings.gradient.addColorStop(0.9, "blue");
+
     this.selectCustomRainParticleSettings();
   }// ==============================
 
@@ -281,6 +283,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     if(this.clearCanvasFlag) {
       this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     }
+
     if(this.blueInput.nativeElement.value === "0"
       && this.greenInput.nativeElement.value === "0"
       && this.redInput.nativeElement.value === "0") {
@@ -288,6 +291,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     } else {
       this.context!.fillStyle = 'rgb(0, 0, 0, 1)';
     }// =====
+
     this.context!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let alphaModifier = 0.05;
@@ -342,6 +346,20 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     for(let i = 0; i < this.numberOfParticles; i++) {
       this.particlesArray[i].setRainParticleSettings(tempSettingsObj);
     }// =====
+  }// ==============================
+
+  private setRgbInputFromselectedCssColorObject(): void {
+    let commaOneIdx = this.selectedCssColorObject.rgb.indexOf(',');
+    let redIdx = 4;
+    this.redInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(redIdx, (commaOneIdx - redIdx));
+
+    let commaTwoIdx = this.selectedCssColorObject.rgb.indexOf(',', (commaOneIdx + 1));
+    let greenIdx = commaOneIdx + 2;
+    this.greenInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(greenIdx, (commaTwoIdx - greenIdx));
+
+    let blueIdx = commaTwoIdx + 2;
+    let closeParens = this.selectedCssColorObject.rgb.indexOf(')');
+    this.blueInput.nativeElement.value = this.selectedCssColorObject.rgb.substr(blueIdx, (closeParens - blueIdx));
   }// ==============================
 
   /**
