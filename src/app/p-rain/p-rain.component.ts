@@ -63,7 +63,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
   availableDirections: string[] = RainParticle.availableDirections;
   availableColorSettings: string[] = RainParticle.availableColorSettings;
 
-  selectedRainParticleSettings: number = 2;
+  selectedRainParticleSettings: number = 0;
 
   rainParticleSettings: RainParticleSettings[] = [
     {   // 0 - b&w "brightness" "default"
@@ -206,9 +206,11 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     this.customRainParticleSettings.color = RainParticle.availableColorSettings[0];
 
     this.customRainParticleSettings.gradient = this.context!.createLinearGradient(0, 0, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
-    this.customRainParticleSettings.gradient.addColorStop(0.3, "red");
+    this.customRainParticleSettings.gradient.addColorStop(0.2, "red");
+    this.customRainParticleSettings.gradient.addColorStop(0.4, "orange");
     this.customRainParticleSettings.gradient.addColorStop(0.6, "yellow");
-    this.customRainParticleSettings.gradient.addColorStop(0.9, "blue");
+    this.customRainParticleSettings.gradient.addColorStop(0.8, "green");
+    this.customRainParticleSettings.gradient.addColorStop(1, "blue");
 
     this.selectCustomRainParticleSettings();
   }// ==============================
@@ -254,6 +256,7 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
       this.usePresetFlag = this.usePresetCB.nativeElement.checked = true;
     }// =====
     this.selectedRainParticleSettings = parseInt((<HTMLSelectElement>event.target).value);
+    this.matchCustomSettingsToPreset();
     this.setRainParticleSettings();
   }// ==============================
 
