@@ -7,6 +7,18 @@ import { CssColorObj } from 'src/app/common/models';
 })
 export class GlobalService {
 
+  fonts: string[] = [
+    'Arial',                'Verdana',
+    'Tahoma',               'Trebuchet MS',
+    'Impact',               'Times New Roman',
+    'Didot',                'Georgia',
+    'American Typewriter',  'Andalé Mono',
+    'Courier',              'Lucida Console',
+    'Monaco',               'Bradley Hand',
+    'Brush Script MT',      'Luminari',
+    'Comic Sans MS',
+  ];
+
   constructor() { }
 
   applyInvert(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number) {

@@ -27,18 +27,8 @@ export class PTextComponent implements AfterViewInit {
    * this section is for testing font settings
    */
   private fontSize: string = '36px';
-  private fonts: string[] = [
-    'Arial',                'Verdana',
-    'Tahoma',               'Trebuchet MS',
-    'Impact',               'Times New Roman',
-    'Didot',                'Georgia',
-    'American Typewriter',  'Andalé Mono',
-    'Courier',              'Lucida Console',
-    'Monaco',               'Bradley Hand',
-    'Brush Script MT',      'Luminari',
-    'Comic Sans MS',
-  ];
-  private demoFont: string = this.fontSize +' '+ this.fonts[0];
+  private fonts: string[] = this.globalService.fonts;
+  private selectedFont: string = this.fontSize +' '+ this.fonts[0];
 
   /**
    * Preset option sets
@@ -50,6 +40,7 @@ export class PTextComponent implements AfterViewInit {
    */
   selectedTextObj: number = environment.text_selectedTextObj;
   canvasHeaderOffset: number = environment.canvasHeaderOffset;
+  canvasSidebarOffset: number = 0;
   private textObjs: {
     color: string;
     font: string;
@@ -68,13 +59,13 @@ export class PTextComponent implements AfterViewInit {
   }[] = [
     {
       color: 'white',
-      font: this.demoFont,
-      text: 'Demo Text',
+      font: this.selectedFont,
+      text: 'Demo T',
       x: 5,
       y: 50,
       mapX: 0,
       mapY: 0,
-      width: (window.innerWidth / 11) + 15,
+      width: (window.innerWidth / 12),
       height: (window.innerHeight / 11),
       scale: 10,
       resultOffsetX: 10,  // negate the (x * scale)
@@ -154,26 +145,26 @@ export class PTextComponent implements AfterViewInit {
     switch(this.selectedTextObj) {
       // ----------
       case -2:
-        this.globalService.drawRect(this.context!, 'white', 0, (0 + this.canvasHeaderOffset), 750, 750);
+        this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 750, 750);
         break;
 
       // ----------
       case 0:
         this.globalService.drawRect(this.context!, 'white',
-          this.textObjs[this.selectedTextObj].mapX,
+          (this.textObjs[this.selectedTextObj].mapX + this.canvasSidebarOffset),
           (this.textObjs[this.selectedTextObj].mapY + this.canvasHeaderOffset),
           this.textObjs[this.selectedTextObj].width,
           this.textObjs[this.selectedTextObj].height);
         this.globalService.drawText(
           this.context!,
           this.textObjs[this.selectedTextObj].text,
-          this.textObjs[this.selectedTextObj].x,
-          this.textObjs[this.selectedTextObj].y + this.canvasHeaderOffset,
+          (this.textObjs[this.selectedTextObj].x + this.canvasSidebarOffset),
+          (this.textObjs[this.selectedTextObj].y + this.canvasHeaderOffset),
           this.textObjs[this.selectedTextObj].color,
           this.textObjs[this.selectedTextObj].font);
         break;
       default:
-        this.globalService.drawRect(this.context!, 'white', 0, (0 + this.canvasHeaderOffset), 100, 100);
+        this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 100, 100);
         break;
     }// =====
   }// ==============================
@@ -183,9 +174,11 @@ export class PTextComponent implements AfterViewInit {
    */
   private setupCanvas() {
     this.context = this.canvas.nativeElement.getContext('2d');
+    let sidebarWidth = ((window.innerWidth / 12) * 2);
+    this.canvasSidebarOffset = sidebarWidth;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
-    this.globalService.debug("Inner width & height:", window.innerWidth, window.innerHeight);
+    this.globalService.debug("Inner width & height:", this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     switch(this.selectedTextObj) {
       // ----------
@@ -234,7 +227,7 @@ export class PTextComponent implements AfterViewInit {
             "rgb("+ red +", "+ green +", "+ blue +")"
           );
           // row.push(tempMappedPixel);// =====
-          this.particlesArray.push(new TextParticle(x*3, (y*3 + this.canvasHeaderOffset), tempMappedPixel));
+          this.particlesArray.push(new TextParticle((x*3 + this.canvasSidebarOffset), (y*3 + this.canvasHeaderOffset), tempMappedPixel));
         }// =====
       }// =====
       // this.mappedImage.push(row);
@@ -243,7 +236,7 @@ export class PTextComponent implements AfterViewInit {
 
   private setupMappedText() {
     let pixels = this.context!.getImageData(
-      this.textObjs[this.selectedTextObj].mapX,
+      (this.textObjs[this.selectedTextObj].mapX + this.canvasSidebarOffset),
       (this.textObjs[this.selectedTextObj].mapY + this.canvasHeaderOffset),
       this.textObjs[this.selectedTextObj].width,
       this.textObjs[this.selectedTextObj].height);
@@ -264,7 +257,8 @@ export class PTextComponent implements AfterViewInit {
           );
           // row.push(tempMappedPixel);// =====
           this.particlesArray.push(new TextParticle(
-            (x * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetX,
+            (x * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetX
+             + this.canvasSidebarOffset,
             (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY
              + this.canvasHeaderOffset,
             tempMappedPixel));
