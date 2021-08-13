@@ -1,4 +1,6 @@
-export class RainParticleSettings {
+import { ParticleSettings } from "./particle-settings";
+
+export class RainParticleSettings implements ParticleSettings {
   color: string;
   direction: string;
   globalCompositeOperationOptions: string;

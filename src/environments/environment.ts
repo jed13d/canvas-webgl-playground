@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   debugging: true,
-  defaultProject: 1,
-  imageSrc: "assets/images/disturbed.jpg",
+  defaultProject: 2,
+  imageSrc: "assets/images/reaching-out.png",
 
   text_selectedTextObj: 0,
   canvasHeaderOffset: 80,

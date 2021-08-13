@@ -3,6 +3,17 @@
 
     <div class="form-group">
 
+      <!-- Preset Settings Select -->
+      <div class="form-inline">
+        <label for="PresetDropdown">
+          <input class="form-check-input" type="checkbox" id="UsePresetCB" (change)="toggleUsePresetFlag()" #UsePresetCB>
+          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the preset option of your choice."></span>
+        </label>
+        <select id="PresetDropdown" ng-model="selectedTextParticleSettings" class="custom-select custom-select-sm w-75" (change)="selectPresetTextParticleSettings($event)">
+          <option *ngFor="let settingsObj of textParticleSettings; let i = index" [selected]="selectedTextParticleSettings == i" [value]="i">{{settingsObj.name}}</option>
+        </select>
+      </div>
+
     </div>
 
   </form>

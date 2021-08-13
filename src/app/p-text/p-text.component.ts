@@ -1,19 +1,21 @@
-import { Component, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from 'src/app/services/global.service';
-import { MappedPixel, MouseObj, TextParticle } from 'src/app/common/models/';
+import {ColorObj, CssColorObj, MappedPixel, MouseObj, TextParticle, TextParticleSettings } from 'src/app/common/models/';
 
 @Component({
   selector: 'app-p-text',
   templateUrl: './p-text.component.html',
   styleUrls: ['./p-text.component.scss']
 })
-export class PTextComponent implements AfterViewInit {
+export class PTextComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('Canvas')
   private canvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
   canvasClass: string = 'canvasPoisitionText';
+  
+  private animationId: number = 0;
 
   private image: HTMLImageElement = new Image();
   private particlesArray: TextParticle[] = [];
@@ -30,33 +32,22 @@ export class PTextComponent implements AfterViewInit {
   private fonts: string[] = this.globalService.fonts;
   private selectedFont: string = this.fontSize +' '+ this.fonts[0];
 
+  @ViewChild('UsePresetCB')
+  private usePresetCB!: ElementRef<HTMLInputElement>;
+  private usePresetFlag: boolean = true;
+
   /**
    * Preset option sets
-   * selectedTextObj sets various dependent settings
+   * selectedTextParticleSettings sets various dependent settings
    *    -3 : Experiment with 2 imported images
    *    -2 : Experiment with an imported image
    *    -1 : "Star filled sky" and "moving black hole" effect
    *    0+ : Various text constellation effects
    */
-  selectedTextObj: number = environment.text_selectedTextObj;
+  selectedTextParticleSettings: number = environment.text_selectedTextObj;
   canvasHeaderOffset: number = environment.canvasHeaderOffset;
   canvasSidebarOffset: number = 0;
-  private textObjs: {
-    color: string;
-    font: string;
-    text: string;
-    x: number;
-    y: number;
-    mapX: number;
-    mapY: number;
-    width: number;
-    height: number;
-    scale: number;
-    resultOffsetX: number;
-    resultOffsetY: number;
-    constellationDistance: number;
-    constellationEffect: boolean;
-  }[] = [
+  textParticleSettings: TextParticleSettings[] = [
     {
       color: 'white',
       font: this.selectedFont,
@@ -65,6 +56,7 @@ export class PTextComponent implements AfterViewInit {
       y: 50,
       mapX: 0,
       mapY: 0,
+      name: 'default',
       width: (window.innerWidth / 12),
       height: (window.innerHeight / 11),
       scale: 10,
@@ -74,6 +66,13 @@ export class PTextComponent implements AfterViewInit {
       constellationEffect: true,
     },
   ];
+  
+  availableCrayolaColors: CssColorObj[] = this.globalService.availableCrayolaColors;
+  availableCssColors: CssColorObj[] = this.globalService.availableCssColors;
+  selectedCssColorObject: CssColorObj = this.availableCssColors[0];
+
+  customColorObj: ColorObj = new ColorObj();
+  customTextParticleSettings!: TextParticleSettings;
 
   // -------------------------------
   constructor(
@@ -85,11 +84,32 @@ export class PTextComponent implements AfterViewInit {
     this.setupCanvas();
   }// ==============================
 
+  ngOnDestroy(): void {
+    this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    cancelAnimationFrame(this.animationId);
+
+    window.removeEventListener('mousemove', (event) => {
+      this.mouse.x = event.x;
+      this.mouse.y = event.y;
+      this.globalService.debug(this.mouse);
+    });// =====
+  }// ==============================
+
+  selectPresetTextParticleSettings(event: Event): void  {
+    // this.debug("Preset selected: ".concat((<HTMLSelectElement>event.target).value));
+    if(!this.usePresetFlag) {
+      this.usePresetFlag = this.usePresetCB.nativeElement.checked = true;
+    }// =====
+    this.selectedTextParticleSettings = parseInt((<HTMLSelectElement>event.target).value);
+    this.matchCustomSettingsToPreset();
+    this.setTextParticleSettings();
+  }// ==============================
+
   private animate() {
     this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     for(let i = 0; i < this.particlesArray.length; i++) {
-      switch(this.selectedTextObj) {
+      switch(this.selectedTextParticleSettings) {
         // ----------
         case -1:
           this.particlesArray[i].draw(this.context!);
@@ -104,21 +124,21 @@ export class PTextComponent implements AfterViewInit {
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
 
-    if(this.textObjs[this.selectedTextObj].constellationEffect) {
+    if(this.textParticleSettings[this.selectedTextParticleSettings].constellationEffect) {
       this.constellationEffect();
     }// =====
 
-    if(this.selectedTextObj >= 0) {
+    if(this.selectedTextParticleSettings >= 0) {
       this.debugTextSpace();
     }// =====
 
-    requestAnimationFrame(() => {
+    this.animationId = requestAnimationFrame(() => {
       this.animate();
-    });
+    });// =====
   }// ==============================
 
   private constellationEffect() {
-    let effectRange = this.textObjs[this.selectedTextObj].constellationDistance;
+    let effectRange = this.textParticleSettings[this.selectedTextParticleSettings].constellationDistance;
     let particleCount = this.particlesArray.length;
     for(let a = 0; a < particleCount; a++) {
       for(let b = a; b < particleCount; b++) {
@@ -140,9 +160,31 @@ export class PTextComponent implements AfterViewInit {
 
   }// ==============================
 
+  toggleUsePresetFlag(): void {
+    this.debug("toggleUsePresetFlag: ", this.usePresetCB.nativeElement.checked);
+    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
+    this.setTextParticleSettings();
+  }// ==============================
+
+  /**
+   * Wrapper method around console.log to output only when in debugging mode.
+   * It's parameters are set up just like console.log for ease of use.
+   * @param message
+   * @param optionalParams
+   */
+  private debug(message?: any, ...optionalParams: any): void {
+    if(environment.debugging) {
+      if(optionalParams.length > 0) {
+        this.globalService.debug("PTextComponent:\n".concat(message), optionalParams);
+      } else {
+        this.globalService.debug("PTextComponent:\n".concat(message));
+      }// =====
+    }// =====
+  }// ==============================
+
   // used to find selector space of text
   private debugTextSpace() {
-    switch(this.selectedTextObj) {
+    switch(this.selectedTextParticleSettings) {
       // ----------
       case -2:
         this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 750, 750);
@@ -151,17 +193,17 @@ export class PTextComponent implements AfterViewInit {
       // ----------
       case 0:
         this.globalService.drawRect(this.context!, 'white',
-          (this.textObjs[this.selectedTextObj].mapX + this.canvasSidebarOffset),
-          (this.textObjs[this.selectedTextObj].mapY + this.canvasHeaderOffset),
-          this.textObjs[this.selectedTextObj].width,
-          this.textObjs[this.selectedTextObj].height);
+          (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset),
+          (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset),
+          this.textParticleSettings[this.selectedTextParticleSettings].width,
+          this.textParticleSettings[this.selectedTextParticleSettings].height);
         this.globalService.drawText(
           this.context!,
-          this.textObjs[this.selectedTextObj].text,
-          (this.textObjs[this.selectedTextObj].x + this.canvasSidebarOffset),
-          (this.textObjs[this.selectedTextObj].y + this.canvasHeaderOffset),
-          this.textObjs[this.selectedTextObj].color,
-          this.textObjs[this.selectedTextObj].font);
+          this.textParticleSettings[this.selectedTextParticleSettings].text,
+          (this.textParticleSettings[this.selectedTextParticleSettings].x + this.canvasSidebarOffset),
+          (this.textParticleSettings[this.selectedTextParticleSettings].y + this.canvasHeaderOffset),
+          this.textParticleSettings[this.selectedTextParticleSettings].color,
+          this.textParticleSettings[this.selectedTextParticleSettings].font);
         break;
       default:
         this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 100, 100);
@@ -169,8 +211,25 @@ export class PTextComponent implements AfterViewInit {
     }// =====
   }// ==============================
 
+  private matchCustomSettingsToPreset(): void {
+    this.customTextParticleSettings = Object.assign({}, this.textParticleSettings[this.selectedTextParticleSettings]);
+    
+  }// ==============================
+
   /**
-   * Different cavas settings based on 'selectedTextObj' value
+   * Separated out so settings can be changed on the fly,
+   * note: new settings aren't visible until the particle is reset
+   */
+  private setTextParticleSettings(): void {
+    // let tempSettingsObj = this.usePresetFlag ? this.textParticleSettings[this.selectedTextParticleSettings] : this.customTextParticleSettings;
+    // let particleCount = this.particlesArray.length;
+    // for(let i = 0; i < particleCount; i++) {
+    //   this.particlesArray[i].setTextParticleSettings(tempSettingsObj);
+    // }// =====
+  }// ==============================
+
+  /**
+   * Different cavas settings based on 'selectedTextParticleSettings' value
    */
   private setupCanvas() {
     this.context = this.canvas.nativeElement.getContext('2d');
@@ -180,7 +239,7 @@ export class PTextComponent implements AfterViewInit {
     this.canvas.nativeElement.height = window.innerHeight;
     this.globalService.debug("Inner width & height:", this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-    switch(this.selectedTextObj) {
+    switch(this.selectedTextParticleSettings) {
       // ----------
       case -2:
         this.image.src = environment.imageSrc;
@@ -236,10 +295,10 @@ export class PTextComponent implements AfterViewInit {
 
   private setupMappedText() {
     let pixels = this.context!.getImageData(
-      (this.textObjs[this.selectedTextObj].mapX + this.canvasSidebarOffset),
-      (this.textObjs[this.selectedTextObj].mapY + this.canvasHeaderOffset),
-      this.textObjs[this.selectedTextObj].width,
-      this.textObjs[this.selectedTextObj].height);
+      (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset + 1),
+      (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset + 1),
+      this.textParticleSettings[this.selectedTextParticleSettings].width,
+      this.textParticleSettings[this.selectedTextParticleSettings].height);
     this.globalService.debug("pixels:", pixels);
 
     for(let y = 0, y2 = pixels.height; y < y2; y++) {
@@ -257,9 +316,9 @@ export class PTextComponent implements AfterViewInit {
           );
           // row.push(tempMappedPixel);// =====
           this.particlesArray.push(new TextParticle(
-            (x * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetX
+            (x * this.textParticleSettings[this.selectedTextParticleSettings].scale) + this.textParticleSettings[this.selectedTextParticleSettings].resultOffsetX
              + this.canvasSidebarOffset,
-            (y * this.textObjs[this.selectedTextObj].scale) + this.textObjs[this.selectedTextObj].resultOffsetY
+            (y * this.textParticleSettings[this.selectedTextParticleSettings].scale) + this.textParticleSettings[this.selectedTextParticleSettings].resultOffsetY
              + this.canvasHeaderOffset,
             tempMappedPixel));
         }// =====
