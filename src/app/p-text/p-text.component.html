@@ -14,6 +14,16 @@
         </select>
       </div>
 
+      <!-- Direction Select -->
+      <!-- <div class="form-inline mb-1">
+        <label for="DirectionDropdown">
+          <span class="bi bi-info-circle mr-2" placement="right" ngbTooltip="Select the direction for the particles to flow."></span>
+        </label>
+        <select id="DirectionDropdown" class="custom-select custom-select-sm w-75" (change)="selectCustomDirection($event)">
+          <option *ngFor="let direction of availableDirections" [selected]="direction == customRainParticleSettings.direction" [value]="direction">{{direction}}</option>
+        </select>
+      </div> -->
+
       <!--
         color: string;
         font: string;

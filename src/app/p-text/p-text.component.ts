@@ -78,10 +78,15 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
 
   // -------------------------------
   constructor(
-    private globalService: GlobalService,) { }
+    private globalService: GlobalService,) {
+    this.matchCustomSettingsToPreset();
+    this.customTextParticleSettings.name = "Custom Settings";
+  }// ==============================
 
   ngAfterViewInit(): void {
     this.setupMouse();
+
+    this.usePresetCB.nativeElement.checked = this.usePresetFlag;
 
     this.setupCanvas();
   }// ==============================
@@ -103,22 +108,26 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
     this.setTextParticleSettings();
   }// ==============================
 
-  private animate() {
+  // selectCustomDirection(event: Event): void {
+  //   this.debug((<HTMLSelectElement>event.target).value);
+  //   this.customTextParticleSettings.direction = (<HTMLSelectElement>event.target).value;
+  //   this.selectCustomRainParticleSettings();
+  // }// ==============================
+
+  toggleUsePresetFlag(): void {
+    this.debug("toggleUsePresetFlag: ", this.usePresetCB.nativeElement.checked);
+    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
+    if(this.usePresetFlag) {
+      this.matchCustomSettingsToPreset();
+    }
+    this.setTextParticleSettings();
+  }// ==============================
+
+  private animate(): void {
     this.context!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     for(let i = 0; i < this.particlesArray.length; i++) {
-      switch(this.selectedTextParticleSettings) {
-        // ----------
-        case -1:
-          this.particlesArray[i].draw(this.context!);
-          break;
-
-        // ----------
-        case 0:
-        default:
-          this.particlesArray[i].draw(this.context!);
-          break;
-      }// =====
+      this.particlesArray[i].draw(this.context!);
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
 
@@ -158,12 +167,6 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
 
   }// ==============================
 
-  toggleUsePresetFlag(): void {
-    this.debug("toggleUsePresetFlag: ", this.usePresetCB.nativeElement.checked);
-    this.usePresetFlag = this.usePresetCB.nativeElement.checked;
-    this.setTextParticleSettings();
-  }// ==============================
-
   /**
    * Wrapper method around console.log to output only when in debugging mode.
    * It's parameters are set up just like console.log for ease of use.
@@ -181,7 +184,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
   }// ==============================
 
   // used to find selector space of text
-  private debugTextSpace() {
+  private debugTextSpace(): void {
     switch(this.selectedTextParticleSettings) {
       // ----------
       case -2:
@@ -203,6 +206,8 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
           this.textParticleSettings[this.selectedTextParticleSettings].color,
           this.textParticleSettings[this.selectedTextParticleSettings].font);
         break;
+
+      // ----------
       default:
         this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 100, 100);
         break;
@@ -211,7 +216,12 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
 
   private matchCustomSettingsToPreset(): void {
     this.customTextParticleSettings = Object.assign({}, this.textParticleSettings[this.selectedTextParticleSettings]);
+  }// ==============================
 
+  private mouseMoveMethod(event: any) {
+    this.mouse.x = event.x;
+    this.mouse.y = event.y;
+    this.globalService.debug(this.mouse);
   }// ==============================
 
   /**
@@ -331,12 +341,6 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
    */
   private setupMouse() {
     window.addEventListener('mousemove', this.mouseMoveEventCallbackMethod);
-  }// ==============================
-
-  private mouseMoveMethod(event: any) {
-    this.mouse.x = event.x;
-    this.mouse.y = event.y;
-    this.globalService.debug(this.mouse);
   }// ==============================
 
   /**

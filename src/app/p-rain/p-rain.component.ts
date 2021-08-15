@@ -191,9 +191,6 @@ export class PRainComponent implements AfterViewInit, OnDestroy {
     }// =====
   }// ==============================
 
-  /**
-   * Sets the direction which the particles will flow towards.
-   */
   selectCustomDirection(event: Event): void {
     this.debug((<HTMLSelectElement>event.target).value);
     this.customRainParticleSettings.direction = (<HTMLSelectElement>event.target).value;
