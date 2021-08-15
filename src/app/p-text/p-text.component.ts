@@ -183,35 +183,22 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
     }// =====
   }// ==============================
 
-  // used to find selector space of text
+  // 'Preview' space
   private debugTextSpace(): void {
-    switch(this.selectedTextParticleSettings) {
-      // ----------
-      case -2:
-        this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 750, 750);
-        break;
-
-      // ----------
-      case 0:
-        this.globalService.drawRect(this.context!, 'white',
-          (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset),
-          (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset),
-          this.textParticleSettings[this.selectedTextParticleSettings].width,
-          this.textParticleSettings[this.selectedTextParticleSettings].height);
-        this.globalService.drawText(
-          this.context!,
-          this.textParticleSettings[this.selectedTextParticleSettings].text,
-          (this.textParticleSettings[this.selectedTextParticleSettings].x + this.canvasSidebarOffset),
-          (this.textParticleSettings[this.selectedTextParticleSettings].y + this.canvasHeaderOffset),
-          this.textParticleSettings[this.selectedTextParticleSettings].color,
-          this.textParticleSettings[this.selectedTextParticleSettings].font);
-        break;
-
-      // ----------
-      default:
-        this.globalService.drawRect(this.context!, 'white', (0 + this.canvasSidebarOffset), (0 + this.canvasHeaderOffset), 100, 100);
-        break;
-    }// =====
+    this.globalService.drawRect(
+      this.context!,
+      'white',
+      (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset),
+      (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset),
+      this.textParticleSettings[this.selectedTextParticleSettings].width,
+      this.textParticleSettings[this.selectedTextParticleSettings].height);
+    this.globalService.drawText(
+      this.context!,
+      this.textParticleSettings[this.selectedTextParticleSettings].text,
+      (this.textParticleSettings[this.selectedTextParticleSettings].x + this.canvasSidebarOffset),
+      (this.textParticleSettings[this.selectedTextParticleSettings].y + this.canvasHeaderOffset),
+      this.textParticleSettings[this.selectedTextParticleSettings].color,
+      this.textParticleSettings[this.selectedTextParticleSettings].font);
   }// ==============================
 
   private matchCustomSettingsToPreset(): void {
