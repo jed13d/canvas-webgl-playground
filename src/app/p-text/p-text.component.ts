@@ -131,7 +131,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
       this.particlesArray[i].update(this.context!, this.mouse);
     }// =====
 
-    if(this.textParticleSettings[this.selectedTextParticleSettings].constellationEffect) {
+    if(this.customTextParticleSettings.constellationEffect) {
       this.constellationEffect();
     }// =====
 
@@ -145,7 +145,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
   }// ==============================
 
   private constellationEffect() {
-    let effectRange = this.textParticleSettings[this.selectedTextParticleSettings].constellationDistance;
+    let effectRange = this.customTextParticleSettings.constellationDistance;
     let particleCount = this.particlesArray.length;
     for(let a = 0; a < particleCount; a++) {
       for(let b = a; b < particleCount; b++) {
@@ -188,17 +188,17 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
     this.globalService.drawRect(
       this.context!,
       'white',
-      (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset),
-      (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset),
-      this.textParticleSettings[this.selectedTextParticleSettings].width,
-      this.textParticleSettings[this.selectedTextParticleSettings].height);
+      (this.customTextParticleSettings.mapX + this.canvasSidebarOffset),
+      (this.customTextParticleSettings.mapY + this.canvasHeaderOffset),
+      this.customTextParticleSettings.width,
+      this.customTextParticleSettings.height);
     this.globalService.drawText(
       this.context!,
-      this.textParticleSettings[this.selectedTextParticleSettings].text,
-      (this.textParticleSettings[this.selectedTextParticleSettings].x + this.canvasSidebarOffset),
-      (this.textParticleSettings[this.selectedTextParticleSettings].y + this.canvasHeaderOffset),
-      this.textParticleSettings[this.selectedTextParticleSettings].color,
-      this.textParticleSettings[this.selectedTextParticleSettings].font);
+      this.customTextParticleSettings.text,
+      (this.customTextParticleSettings.x + this.canvasSidebarOffset),
+      (this.customTextParticleSettings.y + this.canvasHeaderOffset),
+      this.customTextParticleSettings.color,
+      this.customTextParticleSettings.font);
   }// ==============================
 
   private matchCustomSettingsToPreset(): void {
@@ -216,10 +216,9 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
    * note: new settings aren't visible until the particle is reset
    */
   private setTextParticleSettings(): void {
-    // let tempSettingsObj = this.usePresetFlag ? this.textParticleSettings[this.selectedTextParticleSettings] : this.customTextParticleSettings;
     // let particleCount = this.particlesArray.length;
     // for(let i = 0; i < particleCount; i++) {
-    //   this.particlesArray[i].setTextParticleSettings(tempSettingsObj);
+    //   this.particlesArray[i].setTextParticleSettings(this.customTextParticleSettings);
     // }// =====
   }// ==============================
 
@@ -290,10 +289,10 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
 
   private setupMappedText() {
     let pixels = this.context!.getImageData(
-      (this.textParticleSettings[this.selectedTextParticleSettings].mapX + this.canvasSidebarOffset + 1),
-      (this.textParticleSettings[this.selectedTextParticleSettings].mapY + this.canvasHeaderOffset + 1),
-      this.textParticleSettings[this.selectedTextParticleSettings].width,
-      this.textParticleSettings[this.selectedTextParticleSettings].height);
+      (this.customTextParticleSettings.mapX + this.canvasSidebarOffset + 1),
+      (this.customTextParticleSettings.mapY + this.canvasHeaderOffset + 1),
+      this.customTextParticleSettings.width,
+      this.customTextParticleSettings.height);
     this.globalService.debug("pixels:", pixels);
 
     for(let y = 0, y2 = pixels.height; y < y2; y++) {
@@ -311,9 +310,9 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
           );
           // row.push(tempMappedPixel);// =====
           this.particlesArray.push(new TextParticle(
-            (x * this.textParticleSettings[this.selectedTextParticleSettings].scale) + this.textParticleSettings[this.selectedTextParticleSettings].resultOffsetX
+            (x * this.customTextParticleSettings.scale) + this.customTextParticleSettings.resultOffsetX
              + this.canvasSidebarOffset,
-            (y * this.textParticleSettings[this.selectedTextParticleSettings].scale) + this.textParticleSettings[this.selectedTextParticleSettings].resultOffsetY
+            (y * this.customTextParticleSettings.scale) + this.customTextParticleSettings.resultOffsetY
              + this.canvasHeaderOffset,
             tempMappedPixel));
         }// =====
