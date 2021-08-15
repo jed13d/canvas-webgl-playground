@@ -14,7 +14,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
   private canvas!: ElementRef<HTMLCanvasElement>;
   private context?: CanvasRenderingContext2D | null = null;
   canvasClass: string = 'canvasPoisitionText';
-  
+
   private animationId: number = 0;
 
   private image: HTMLImageElement = new Image();
@@ -56,7 +56,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
       y: 50,
       mapX: 0,
       mapY: 0,
-      name: 'default',
+      name: 'Demo',
       width: (window.innerWidth / 12),
       height: (window.innerHeight / 11),
       scale: 10,
@@ -66,13 +66,15 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
       constellationEffect: true,
     },
   ];
-  
+
   availableCrayolaColors: CssColorObj[] = this.globalService.availableCrayolaColors;
   availableCssColors: CssColorObj[] = this.globalService.availableCssColors;
   selectedCssColorObject: CssColorObj = this.availableCssColors[0];
 
   customColorObj: ColorObj = new ColorObj();
   customTextParticleSettings!: TextParticleSettings;
+
+  mouseMoveEventCallbackMethod = this.mouseMoveMethod.bind(this);
 
   // -------------------------------
   constructor(
@@ -88,11 +90,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
     this.globalService.clearCanvas(this.context!, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     cancelAnimationFrame(this.animationId);
 
-    window.removeEventListener('mousemove', (event) => {
-      this.mouse.x = event.x;
-      this.mouse.y = event.y;
-      this.globalService.debug(this.mouse);
-    });// =====
+    window.removeEventListener('mousemove', this.mouseMoveEventCallbackMethod);
   }// ==============================
 
   selectPresetTextParticleSettings(event: Event): void  {
@@ -213,7 +211,7 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
 
   private matchCustomSettingsToPreset(): void {
     this.customTextParticleSettings = Object.assign({}, this.textParticleSettings[this.selectedTextParticleSettings]);
-    
+
   }// ==============================
 
   /**
@@ -332,11 +330,13 @@ export class PTextComponent implements AfterViewInit, OnDestroy {
    * Link mousemove listener to update mouse object
    */
   private setupMouse() {
-    window.addEventListener('mousemove', (event) => {
-      this.mouse.x = event.x;
-      this.mouse.y = event.y;
-      this.globalService.debug(this.mouse);
-    });// =====
+    window.addEventListener('mousemove', this.mouseMoveEventCallbackMethod);
+  }// ==============================
+
+  private mouseMoveMethod(event: any) {
+    this.mouse.x = event.x;
+    this.mouse.y = event.y;
+    this.globalService.debug(this.mouse);
   }// ==============================
 
   /**
